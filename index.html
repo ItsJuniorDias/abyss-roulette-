@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Abyss Roulette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="bg"></div>
+    <canvas id="gl"></canvas>
+    <div id="grain"></div>
+    <div id="vig"></div>
+    <div id="flash"></div>
+
+    <header id="top">
+      <div class="title">Abyss Roulette<small>EUROPEAN · 37 POCKETS</small></div>
+      <div class="hud">
+        <div class="box stat"><span>BALANCE</span><b id="balance">1000</b></div>
+        <div class="box stat"><span>TOTAL BET</span><b id="staked">0</b></div>
+        <button class="box stat mute" id="mute" aria-pressed="false" title="Sound (M)"><span>SOUND</span><b>ON</b></button>
+      </div>
+    </header>
+    <div id="history"></div>
+
+    <div id="banner" class="hidden">
+      <div class="sfx" id="sfx">KRA-THOOM!</div>
+      <div class="num" id="bnum">17</div>
+      <div class="sub" id="bsub">+350</div>
+    </div>
+
+    <section id="panel">
+      <div id="msg">Pick a chip and click the table · right-click removes</div>
+      <div id="boardWrap"><div id="board"></div></div>
+      <div id="controls">
+        <div id="chips"></div>
+        <button class="btn" id="clear">CLEAR</button>
+        <button class="btn" id="repeat">REBET</button>
+        <button class="btn spin" id="spin">SPIN</button>
+      </div>
+      <div class="legal">Demo credits · prototype · play responsibly</div>
+    </section>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

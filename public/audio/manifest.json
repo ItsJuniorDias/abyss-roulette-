@@ -1,0 +1,99 @@
+{
+  "sfx_chip_place": {
+    "file": "sfx_chip_place.mp3",
+    "kind": "oneshot",
+    "source": "oxidvideos-placing-poker-chips-522523.mp3"
+  },
+  "sfx_chip_stack_clear": {
+    "file": "sfx_chip_stack_clear.mp3",
+    "kind": "oneshot",
+    "source": "freesound_community-allinpushchips-96121.mp3"
+  },
+  "sfx_ui_click": {
+    "file": "sfx_ui_click.mp3",
+    "kind": "oneshot",
+    "source": "freesound_community-menu-button-stone-41289.mp3"
+  },
+  "sfx_wheel_spin_start": {
+    "file": "sfx_wheel_spin_start.mp3",
+    "kind": "oneshot",
+    "source": "spinopel-spinning-roulette-wheel-429832.mp3"
+  },
+  "sfx_ball_roll_loop": {
+    "file": "sfx_ball_roll_loop.mp3",
+    "kind": "loop",
+    "loop": [
+      0.25,
+      4.35
+    ],
+    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+  },
+  "sfx_ball_deflector": {
+    "file": "sfx_ball_deflector.mp3",
+    "kind": "oneshot",
+    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+  },
+  "sfx_ball_hit_a": {
+    "file": "sfx_ball_hit_a.mp3",
+    "kind": "oneshot",
+    "source": "freesound_community-ball-in-hole-99750.mp3"
+  },
+  "sfx_ball_hit_b": {
+    "file": "sfx_ball_hit_b.mp3",
+    "kind": "oneshot",
+    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+  },
+  "sfx_ball_settle": {
+    "file": "sfx_ball_settle.mp3",
+    "kind": "oneshot",
+    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+  },
+  "sfx_win_hit": {
+    "file": "sfx_win_hit.mp3",
+    "kind": "oneshot",
+    "source": "universfield-single-church-bell-2-352062.mp3"
+  },
+  "sfx_bigwin_impact": {
+    "file": "sfx_bigwin_impact.mp3",
+    "kind": "oneshot",
+    "source": "dragon-studio-dry-thunder-443132.mp3"
+  },
+  "sfx_lose_thud": {
+    "file": "sfx_lose_thud.mp3",
+    "kind": "oneshot",
+    "source": "universfield-impact-thud-291047.mp3"
+  },
+  "sfx_ember_whoosh": {
+    "file": "sfx_ember_whoosh.mp3",
+    "kind": "oneshot",
+    "source": "floraphonic-fireball-whoosh-1-179125.mp3"
+  },
+  "amb_crypt_loop": {
+    "file": "amb_crypt_loop.mp3",
+    "kind": "loop",
+    "loop": [
+      0.25,
+      30.25
+    ],
+    "source": "freesound_community-dungeon-air-6983.mp3"
+  },
+  "amb_candle_fire_loop": {
+    "file": "amb_candle_fire_loop.mp3",
+    "kind": "loop",
+    "loop": [
+      0.25,
+      30.25
+    ],
+    "source": "soundsforyou-fireplace-fire-crackling-loop-123930.mp3"
+  },
+  "music_main_a": {
+    "file": "music_main_a.mp3",
+    "kind": "music",
+    "source": "nxtlvl_snds-dark-cinematic-drone-deep-bass-ambient-456038.mp3"
+  },
+  "music_main_b": {
+    "file": "music_main_b.mp3",
+    "kind": "music",
+    "source": "dpatterson_composer-religious-mystery-dark-day-precedes-the-light-456523.mp3"
+  }
+}

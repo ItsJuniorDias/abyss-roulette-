@@ -1,0 +1,19 @@
+{
+  "name": "abyss-roulette",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "gen:assets": "node --env-file-if-exists=.env scripts/gen-assets.mjs",
+    "audio:prepare": "node scripts/prepare-audio.mjs"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
