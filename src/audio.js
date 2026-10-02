@@ -19,6 +19,10 @@ let started = false;
 let muted = readMuted();
 let music = null;
 let tension = null;
+let musicRestore = 0;
+
+// iOS: play through the silent switch, like a music app, instead of as a ringer-level sound.
+try { if ('audioSession' in navigator) navigator.audioSession.type = 'playback'; } catch { /* not supported */ }
 
 function readMuted() {
   try { return localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
@@ -49,24 +53,26 @@ export function audio() {
       if (music) music.el.forEach((el) => { if (document.hidden) el.pause(); else if (el.dataset.active) el.play().catch(() => {}); });
     });
   }
-  if (ac.state === 'suspended' && !document.hidden) ac.resume();
+  // iOS can also leave the context 'interrupted' (after a call, Siri, backgrounding)
+  if (ac.state !== 'running' && !document.hidden) ac.resume().catch(() => {});
   return ac;
 }
 
 // ---------- loading ----------
-async function load() {
+async function loadManifest() {
   try {
     const r = await fetch(`${BASE}manifest.json`);
-    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return;
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return false;
     manifest = await r.json();
-  } catch { return; }
-  await Promise.all(Object.entries(manifest).filter(([, v]) => v.kind !== 'music').map(async ([slot, v]) => {
-    try {
-      const r = await fetch(BASE + v.file);
-      if (!r.ok) return;
-      buffers[slot] = await ac.decodeAudioData(await r.arrayBuffer());
-    } catch { /* keep the synth fallback */ }
-  }));
+    return true;
+  } catch { return false; }
+}
+
+async function loadBuffer(slot) {
+  try {
+    const r = await fetch(BASE + manifest[slot].file);
+    if (r.ok) buffers[slot] = await ac.decodeAudioData(await r.arrayBuffer());
+  } catch { /* keep the synth fallback */ }
 }
 
 const has = (slot) => !!buffers[slot];
@@ -100,18 +106,48 @@ function loop(slot, { vol = 1, to = 'amb', fadeIn = 2 } = {}) {
 }
 
 // ---------- music playlist (streamed, crossfaded) ----------
-function startMusic() {
-  const tracks = Object.entries(manifest).filter(([, v]) => v.kind === 'music').map(([, v]) => BASE + v.file);
-  if (!tracks.length) return;
-  const XF = 4;
-  const el = [new Audio(), new Audio()];
-  const gain = el.map((e) => {
+// Safari only lets a media element play from script once it has played inside a user
+// gesture. primeMusic() runs inside the first gesture and plays a silent clip on both
+// players, so startMusic() can start the real tracks later, after the manifest loads.
+function silentClip() {
+  const n = 441, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+  const str = (o, t) => [...t].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVE'); str(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 44100, true); v.setUint32(28, 88200, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  str(36, 'data'); v.setUint32(40, n * 2, true);
+  return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+}
+
+let players = null;
+function primeMusic() {
+  const silent = silentClip();
+  players = [new Audio(), new Audio()].map((e) => {
     e.preload = 'auto';
+    e.playsInline = true;
+    e.src = silent;
+    e.play().then(() => { if (!e.dataset.active) e.pause(); }).catch(() => {});
     const g = ac.createGain();
     g.gain.value = 0;
     ac.createMediaElementSource(e).connect(g).connect(bus.music);
-    return g;
+    return { e, g };
   });
+}
+
+// iOS also needs a sound started inside the gesture before the context makes noise.
+function unlockOutput() {
+  const s = ac.createBufferSource();
+  s.buffer = ac.createBuffer(1, 1, ac.sampleRate);
+  s.connect(ac.destination);
+  s.start();
+}
+
+function startMusic() {
+  const tracks = Object.entries(manifest).filter(([, v]) => v.kind === 'music').map(([, v]) => BASE + v.file);
+  if (!tracks.length || !players) return;
+  const XF = 4;
+  const el = players.map((p) => p.e);
+  const gain = players.map((p) => p.g);
   let next = 0, cur = 0;
   const start = (k) => {
     const e = el[k];
@@ -138,19 +174,30 @@ function startMusic() {
   music = { el, gain };
 }
 
-// Call on the first user gesture: unlocks audio, loads samples, starts ambience + music.
-export async function start() {
+// Call from every user gesture. The first one unlocks audio, then loads the manifest,
+// starts the music right away and the ambience as soon as each loop is decoded.
+export function start() {
   audio();
   if (started) {
-    // some browsers block <audio>.play() that runs after an await; retry on later gestures
+    // if a browser still blocked a play() that ran after an await, retry on this gesture
     music?.el.forEach((e) => { if (e.dataset.active && e.paused && !document.hidden) e.play().catch(() => {}); });
     return;
   }
   started = true;
-  await load();
-  loop('amb_crypt_loop', { vol: 0.55, fadeIn: 4 });
-  loop('amb_candle_fire_loop', { vol: 0.35, fadeIn: 4 });
+  unlockOutput();
+  primeMusic();
+  boot();
+}
+
+async function boot() {
+  if (!(await loadManifest())) return;
   startMusic();
+  const slots = Object.keys(manifest).filter((k) => manifest[k].kind !== 'music');
+  const amb = [['amb_crypt_loop', 0.55], ['amb_candle_fire_loop', 0.35]];
+  await Promise.all([
+    ...amb.map(([slot, vol]) => manifest[slot] && loadBuffer(slot).then(() => loop(slot, { vol, fadeIn: 4 }))),
+    ...slots.filter((k) => !amb.some(([a]) => a === k)).map(loadBuffer),
+  ]);
 }
 
 // ---------- mute ----------
@@ -219,7 +266,8 @@ export function sweep(delay = 0) {
 export function spinStart() {
   audio();
   if (!play('sfx_wheel_spin_start', { vol: 0.75 })) synthWhoosh();
-  // duck the music a little while the ball is live
+  // duck the music a little while the ball is live (and cancel a pending restore from the last round)
+  clearTimeout(musicRestore);
   if (music) ramp(bus.music.gain, MIX.music * 0.65, 0.8);
   if (has('music_spin_tension')) tension = play('music_spin_tension', { vol: 0.7, to: 'music' });
 }
@@ -269,7 +317,8 @@ export function settle() {
 export function result(kind) {
   audio();
   if (tension) { ramp(tension.gain.gain, 0, 0.6); tension.src.stop(ac.currentTime + 1.5); tension = null; }
-  if (music) setTimeout(() => ramp(bus.music.gain, MIX.music, 2.5), kind === 'bigwin' ? 3500 : 1500);
+  clearTimeout(musicRestore);
+  if (music) musicRestore = setTimeout(() => ramp(bus.music.gain, MIX.music, 2.5), kind === 'bigwin' ? 3500 : 1500);
 
   if (kind === 'lose') {
     if (!play('sfx_lose_thud', { vol: 0.8 })) synthGong(false);

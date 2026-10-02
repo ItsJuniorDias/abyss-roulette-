@@ -5,9 +5,11 @@
 //   npm run gen:assets -- --force   -> regenerates all of them
 //   npm run gen:assets -- emblem    -> generates only the "emblem" asset
 //
-// Images go to public/assets/*.png and the game picks them up automatically.
+// Images go to public/assets/*.png, plus a compressed *.webp when cwebp is on PATH.
+// The game loads the WebP first and falls back to the PNG.
 // If a file is missing, the game falls back to its procedural (canvas) version.
 
+import { spawnSync } from 'node:child_process';
 import { mkdir, writeFile, access } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -80,6 +82,8 @@ async function generate(name, { prompt, aspect }) {
   const b64 = url.replace(/^data:image\/\w+;base64,/, '');
   const file = join(OUT_DIR, `${name}.png`);
   await writeFile(file, Buffer.from(b64, 'base64'));
+  // ~10x smaller for the same look; skipped quietly when cwebp isn't installed
+  spawnSync('cwebp', ['-quiet', '-q', '82', '-m', '6', file, '-o', file.replace(/\.png$/, '.webp')]);
   return file;
 }
 
@@ -99,7 +103,7 @@ async function main() {
     const def = ASSETS[name];
     if (!def) { console.warn(`? unknown asset: ${name}`); continue; }
     const file = join(OUT_DIR, `${name}.png`);
-    if (!force && (await exists(file))) { console.log(`= ${name} (already exists)`); continue; }
+    if (!force && ((await exists(file)) || (await exists(file.replace(/\.png$/, '.webp'))))) { console.log(`= ${name} (already exists)`); continue; }
     process.stdout.write(`… ${name} `);
     try {
       await generate(name, def);

@@ -9,24 +9,29 @@ A 3D European roulette game in the browser, drawn like a Mike Mignola comic: har
 ## Features
 
 - **European single-zero wheel** with the real 37-pocket order, colors and payouts
-- **Physically plausible ball path**: the ball launches, rides the track, clips a deflector, bounces across the frets and settles. It always lands on the pre-drawn result, so a server can decide the outcome.
+- **Physically plausible ball path**: the ball is thrown against the rotor, rides the track, clips a deflector, bounces across the frets and settles. It always lands on the pre-drawn result, so a server can decide the outcome.
 - **Unbiased RNG**: `crypto.getRandomValues` with rejection sampling, so there is no modulo bias
 - **Toon look built in code**: a 3-step gradient map, inverted-hull ink outlines and hand-hatched canvas textures for the wheel and sigil
 - **Generated art (optional)**: a backdrop, sigil, felt and wood textures made with Gemini 2.5 Flash Image through OpenRouter. Every image has a procedural fallback.
 - **Layered audio mix**: music, ambience and SFX buses go through a compressor. The music playlist crossfades, the ambience loops seamlessly, and the ball-roll sound follows the ball's speed. Every sample has a synthesized fallback.
-- **Comic result FX**: a "KRA-THOOM!" banner, screen shake, a red flash and an ember burst on wins
+- **Comic result FX**: a "KRA-THOOM!" banner, screen shake, a red flash and an ember burst on wins. Winning bets light up and the balance counts up.
+- **Phone layout**: in portrait the betting table turns vertical, and it slides away while the ball is live so the wheel fills the screen
+- **Saved progress**: the balance, the last bets and the history survive a reload. **REFILL** appears when you run out of credits.
+- **Accessible**: the table works from the keyboard, screen readers hear the results, and `prefers-reduced-motion` turns off the shake and flashes
 
 ## Controls
 
 | Action | Input |
 |---|---|
-| Pick a chip value | Click a chip (1 · 5 · 25 · 100) |
-| Place a bet | Click a cell on the table |
-| Remove a bet | Right-click the cell |
-| Spin | **SPIN** button or <kbd>Space</kbd> |
-| Repeat the last round's bets | **REBET** |
-| Clear all bets | **CLEAR** |
-| Mute or unmute | **SOUND** button or <kbd>M</kbd> (the choice is remembered) |
+| Pick a chip value | Click a chip (1 · 5 · 25 · 100) or press <kbd>1</kbd>–<kbd>4</kbd> |
+| Place a bet | Click or tap a cell, or focus it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> |
+| Take back the last chip | **UNDO**, <kbd>Z</kbd> or <kbd>Backspace</kbd> |
+| Remove every chip from one cell | Right-click it, or press <kbd>Delete</kbd> while it has focus |
+| Spin | **SPIN** or <kbd>Space</kbd> |
+| Repeat the last round's bets | **REBET** or <kbd>R</kbd> |
+| Clear all bets | **CLEAR** or <kbd>C</kbd> |
+| Get more demo credits | **REFILL** (only shown when you're out) |
+| Mute or unmute | **SOUND** or <kbd>M</kbd> (the choice is remembered) |
 
 ### Bets and payouts
 
@@ -62,14 +67,14 @@ Then open the URL that Vite prints. Click once or press a key to start the audio
 
 ## Generated art
 
-`scripts/gen-assets.mjs` sends a prompt to `google/gemini-2.5-flash-image` through OpenRouter and saves each image as a PNG in `public/assets/`.
+`scripts/gen-assets.mjs` sends a prompt to `google/gemini-2.5-flash-image` through OpenRouter and saves each image as a PNG in `public/assets/`. When `cwebp` is installed, it also writes a WebP copy that is about 10× smaller. The game loads the WebP first and falls back to the PNG. Only the WebP files are committed (~500 KB in total).
 
 | Asset | Used for |
 |---|---|
-| `background.png` | Full-screen backdrop behind the 3D scene |
-| `emblem.png` | Rune sigil under the wheel |
-| `felt.png` | Table cloth texture |
-| `wood.png` | Wheel bowl texture |
+| `background` | Full-screen backdrop behind the 3D scene |
+| `emblem` | Rune sigil under the wheel |
+| `felt` | Table cloth texture |
+| `wood` | Wheel bowl texture |
 
 ```bash
 cp .env.example .env              # add your OPENROUTER_API_KEY
@@ -90,7 +95,9 @@ Put the raw Pixabay downloads in `audio-src/` (gitignored) and keep the Pixabay 
 npm run audio:prepare
 ```
 
-The script cuts and trims each clip, normalizes its loudness, builds seamless loops and writes `public/audio/manifest.json`. The game reads that manifest after the first user gesture. A sound that is missing falls back to a synthesized version.
+The script cuts and trims each clip, normalizes its loudness, builds seamless loops and writes `public/audio/manifest.json`. A sound that is missing falls back to a synthesized version.
+
+Browsers only allow sound after a user gesture, so the first click, tap or key press does the setup. It unlocks the audio, including on iOS Safari, where it also plays through the silent switch. It then starts the music right away and adds the ambience and effects as they finish decoding.
 
 ## How the spin works
 
@@ -123,14 +130,15 @@ public/
 
 ## Roadmap
 
-- [ ] Ball spins against the rotor, as on a real wheel. Today it travels in the same direction as the rotor, only faster.
-- [ ] Rebuy when the balance hits zero, and keep the balance between sessions
-- [ ] Tap to remove a single bet on touch screens
+- [x] Ball spins against the rotor, as on a real wheel
+- [x] Refill when the balance hits zero, and keep the balance between sessions
+- [x] Undo the last chip, which also works on touch screens
+- [x] Phone layout with a vertical table that slides away during the spin
+- [x] Keyboard betting, `aria-live` result announcements, `prefers-reduced-motion`
+- [x] WebP images: ~500 KB instead of 5.3 MB of PNGs
 - [ ] Inside bets: split, street, corner, six line, 0-1-2-3
-- [ ] Table limits and undo for the last chip
-- [ ] Better mobile layout for the HUD, the betting table and the history
-- [ ] Keyboard betting, `aria-live` result announcements, `prefers-reduced-motion`
-- [ ] Ship WebP images instead of the current ~5 MB of PNGs
+- [ ] Table limits
+- [ ] Extra music cues: spin tension, win jingle, big-win stinger (see [AUDIO_CREDITS.md](AUDIO_CREDITS.md))
 
 ## Production notes
 

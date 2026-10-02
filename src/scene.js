@@ -325,7 +325,13 @@ export function createWorld(canvas) {
 
   // optional generated art (npm run gen:assets)
   const loader = new THREE.TextureLoader();
-  const tryLoad = (name, fn) => loader.load(`${import.meta.env.BASE_URL}assets/${name}.png`, (t) => { t.colorSpace = THREE.SRGBColorSpace; fn(t); }, undefined, () => {});
+  // WebP first (shipped), then the raw PNG that gen:assets writes
+  const tryLoad = (name, fn, exts = ['webp', 'png']) => exts.length && loader.load(
+    `${import.meta.env.BASE_URL}assets/${name}.${exts[0]}`,
+    (t) => { t.colorSpace = THREE.SRGBColorSpace; fn(t); },
+    undefined,
+    () => tryLoad(name, fn, exts.slice(1)),
+  );
   tryLoad('emblem', (t) => { t.repeat.set(0.72, 0.72); t.offset.set(0.14, 0.14); sigil.material.map = t; sigil.material.transparent = false; sigil.material.needsUpdate = true; });
   tryLoad('felt', (t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 4); table.material.map = t; table.material.color.set('#8a5a50'); table.material.needsUpdate = true; });
   tryLoad('wood', (t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(8, 1); bowl.material.map = t; bowl.material.color.set('#b07a6a'); bowl.material.needsUpdate = true; });

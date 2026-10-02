@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Abyss Roulette: a 3D European roulette game drawn like a gothic comic. Demo credits only." />
+    <meta name="theme-color" content="#0b0807" />
+    <meta property="og:title" content="Abyss Roulette" />
+    <meta property="og:description" content="3D European roulette in a hard-inked gothic comic style." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23b3191c' stroke='%23000' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%231b1514' stroke='%23d9a23a' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23efe3c4'/%3E%3C/svg%3E" />
     <title>Abyss Roulette</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,27 +23,30 @@
     <header id="top">
       <div class="title">Abyss Roulette<small>EUROPEAN · 37 POCKETS</small></div>
       <div class="hud">
-        <div class="box stat"><span>BALANCE</span><b id="balance">1000</b></div>
+        <div class="box stat" id="balbox"><span>BALANCE</span><b id="balance">1000</b></div>
         <div class="box stat"><span>TOTAL BET</span><b id="staked">0</b></div>
         <button class="box stat mute" id="mute" aria-pressed="false" title="Sound (M)"><span>SOUND</span><b>ON</b></button>
       </div>
     </header>
-    <div id="history"></div>
+    <div id="history" aria-label="Last results"></div>
+    <div id="sr" class="sr-only" aria-live="polite"></div>
 
-    <div id="banner" class="hidden">
+    <div id="banner" class="hidden" aria-hidden="true">
       <div class="sfx" id="sfx">KRA-THOOM!</div>
       <div class="num" id="bnum">17</div>
       <div class="sub" id="bsub">+350</div>
     </div>
 
     <section id="panel">
-      <div id="msg">Pick a chip and click the table · right-click removes</div>
-      <div id="boardWrap"><div id="board"></div></div>
+      <div id="msg" role="status"></div>
+      <div id="boardWrap"><div id="board" role="group" aria-label="Betting table"></div></div>
       <div id="controls">
         <div id="chips"></div>
-        <button class="btn" id="clear">CLEAR</button>
-        <button class="btn" id="repeat">REBET</button>
-        <button class="btn spin" id="spin">SPIN</button>
+        <button class="btn" id="undo" title="Undo last chip (Z)">UNDO</button>
+        <button class="btn" id="clear" title="Clear all bets (C)">CLEAR</button>
+        <button class="btn" id="repeat" title="Repeat last bets (R)">REBET</button>
+        <button class="btn refill" id="refill" hidden>REFILL</button>
+        <button class="btn spin" id="spin" title="Spin (Space)">SPIN</button>
       </div>
       <div class="legal">Demo credits · prototype · play responsibly</div>
     </section>
