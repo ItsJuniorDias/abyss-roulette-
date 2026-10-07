@@ -12,44 +12,8 @@
   <title>Aurum Club · Private Lounge</title>
 </head>
 <body>
-  <main id="game-shell">
-    <div id="bg" aria-hidden="true"></div><div id="ambient-shade" aria-hidden="true"></div>
-    <header id="top">
-      <div class="brand" aria-label="Aurum Club"><div class="title">AURUM<span>PRIVATE ROULETTE</span></div></div>
-      <div class="stat" id="balbox"><span>PLAY BALANCE</span><div><b id="balance">1,000</b></div></div>
-      <button class="icon-button" id="menu-open" aria-label="Open table menu" aria-haspopup="dialog">☰</button>
-    </header>
-    <section id="stage" aria-label="Aurum and the roulette wheel">
-      <div class="host-copy"><span class="eyebrow" id="host-eyebrow">AURUM · YOUR HOST</span><p id="host-message">Your table is ready.</p></div>
-      <div class="mascot-stage"><img id="mascot" src="./animations/ai/mascot-v1/poster.png" alt="Aurum, your lion host in a cream tuxedo" /><canvas id="mascot-canvas" width="640" height="480" aria-hidden="true"></canvas><video id="mascot-video-a" autoplay muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video><video id="mascot-video-b" autoplay muted playsinline webkit-playsinline preload="metadata" aria-hidden="true"></video></div>
-      <div id="wheel-viewport"><canvas id="gl" aria-label="European roulette in 3D"></canvas><span class="wheel-caption">EUROPEAN ROULETTE</span></div>
-      <div id="banner" class="hidden" aria-hidden="true"><div class="sfx" id="sfx">ROUND RESULT</div><div class="result-row"><div class="num" id="bnum">17</div><div class="sub" id="bsub">+350</div></div></div>
-    </section>
-    <aside id="history-panel" aria-label="Recent results"><span class="eyebrow">RECENT</span><div id="history"></div><span id="history-empty">Your first spin awaits.</span><span class="demo-badge">DEMO</span></aside>
-    <section id="panel" aria-label="Betting controls">
-      <div class="table-heading"><h1>Place your bets</h1><button id="full-table-open" class="text-button" aria-haspopup="dialog">Full table ↗</button></div>
-      <div id="quick-board" role="group" aria-label="Quick bets"></div>
-      <div class="chip-picker"><span class="control-label">CHIP</span><div id="chips" role="group" aria-label="Chip value"></div><button class="text-button" id="clear" title="Clear bets (C)">Clear</button></div>
-      <div id="controls"><div class="stat stake-stat"><span>TOTAL BET</span><b id="staked">0</b></div><button class="btn spin" id="spin" title="Spin the wheel (Space)">SPIN THE WHEEL <span aria-hidden="true">↗</span></button><button class="btn refill" id="refill" hidden>+ CREDITS</button></div>
-      <div id="msg" role="status"></div><div class="table-footer">Play credits · Play responsibly</div>
-    </section>
-    <div class="home-area" aria-hidden="true"><span></span></div>
-    <div id="vig" aria-hidden="true"></div><div id="flash" aria-hidden="true"></div>
-    <div id="sheet-backdrop" hidden></div>
-    <section id="table-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="table-title" hidden>
-      <div class="sheet-handle" aria-hidden="true"></div><header class="sheet-heading"><div><span class="eyebrow">37 POCKETS · SINGLE ZERO</span><h2 id="table-title">Full table</h2></div><button class="icon-button" data-close-sheet aria-label="Close full table">×</button></header>
-      <div id="boardWrap" tabindex="0" aria-label="Scroll betting table"><div id="board" role="group" aria-label="All roulette bets"></div></div>
-      <footer class="sheet-footer"><div><span>TOTAL BET</span><b id="sheet-staked">0</b></div><button class="btn" id="table-done">Done · Back to stage</button></footer>
-    </section>
-    <section id="menu-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="menu-title" hidden>
-      <div class="sheet-handle" aria-hidden="true"></div><header class="sheet-heading"><h2 id="menu-title">Your table</h2><button class="icon-button" data-close-sheet aria-label="Close table menu">×</button></header>
-      <div class="table-actions"><button class="btn" id="undo" title="Undo last chip (Z)">↶ Undo last chip</button><button class="btn" id="repeat" title="Repeat bets (R)">↻ Repeat last bets</button><button class="btn mute" id="mute" aria-pressed="false" title="Toggle sound (M)">Sound <b>ON</b></button></div>
-      <p class="menu-note">European roulette · 37 pockets<br>Place a chip on a number or an outside bet.<br>Play credits only. No real money.</p>
-    </section>
-    <div id="sr" class="sr-only" aria-live="polite"></div>
-  </main>
-  <div id="rotate-hint" role="status"><span aria-hidden="true">↻</span><h2>Made for portrait mode.</h2><p>Rotate your phone upright to play.</p></div>
-  <audio id="lounge-music" src="./audio/music_lounge.mp3" preload="none" loop aria-hidden="true"></audio>
-  <script type="module" src="/src/main.js"></script>
+  <div id="root"></div>
+  <noscript>Aurum Club needs JavaScript to run.</noscript>
+  <script type="module" src="/src/app/main.tsx"></script>
 </body>
 </html>

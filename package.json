@@ -5,15 +5,43 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run typecheck && vite build",
     "preview": "vite preview",
     "gen:assets": "node --env-file-if-exists=.env scripts/gen-assets.mjs",
-    "audio:prepare": "node scripts/prepare-audio.mjs"
+    "audio:prepare": "node scripts/prepare-audio.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src vite.config.ts vitest.config.ts",
+    "test": "npm run test:unit && npm run test:regression",
+    "test:unit": "vitest run",
+    "test:regression": "node --test tests/support/*.test.mjs",
+    "assets:check": "node scripts/check-assets.mjs",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"assets/locales/*.json\" \"*.{json,ts,mjs}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"assets/locales/*.json\" \"*.{json,ts,mjs}\"",
+    "verify": "npm run lint && npm run format:check && npm test && npm run assets:check && npm run build"
   },
   "dependencies": {
-    "three": "^0.170.0"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.170.0",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "vite": "^6.0.0"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.170.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "esbuild": "^0.25.12",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^6.0.0",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": "^22.18.0 || ^24.0.0 || >=26.0.0"
   }
 }
