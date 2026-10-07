@@ -1,0 +1,18 @@
+Aurum Club — Golden Lion favicon
+
+Canonical vector: public/favicon.svg
+A front-facing geometric lion, champagne-gold mane, ivory-gold face and
+an emerald-black rounded tile. No text; the silhouette stays legible at 16 px.
+
+Colors: #0c211b background, #f9e3aa highlight, #d8b66c gold, #9d7737 shadow.
+
+Browser assets:
+  public/favicon.svg — scalable 64x64 vector
+  public/favicon.ico — 16x16, 32x32 and 48x48 raster entries
+  public/favicon-32x32.png — transparent-corner PNG fallback
+  public/apple-touch-icon.png — opaque 180x180 iPhone home-screen icon
+
+All assets are linked in index.html. The existing decorative crown at
+public/assets/luxury/crest.svg remains a separate asset.
+Raster exports were rendered from the canonical SVG using Sharp, with ICO
+sizes assembled using Pillow. Regenerate the exports if the vector changes.

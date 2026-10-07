@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Aurum Club — Golden Lion</title>
+  <defs>
+    <linearGradient id="gold" x1="16" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f9e3aa"/>
+      <stop offset=".48" stop-color="#d8b66c"/>
+      <stop offset="1" stop-color="#9d7737"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0c211b"/>
+  <rect x="3" y="3" width="58" height="58" rx="11" fill="none" stroke="#d8b66c" stroke-opacity=".4"/>
+  <path fill="url(#gold)" d="M32 7 39 10 45 10 49 17 54 22 52 29 55 35 50 40 48 47 40 49 32 57 24 49 16 47 14 40 9 35 12 29 10 22 15 17 19 10 25 10Z"/>
+  <path fill="#0c211b" d="M17 20 21 16 25 20 24 25 20 25ZM47 20 43 16 39 20 40 25 44 25Z"/>
+  <path fill="#f9e3aa" d="M25 19 32 22 39 19 43 26 40 34 39 41 32 48 25 41 24 34 21 26Z"/>
+  <path fill="#0c211b" d="m23 26 7 2-2 3-4-1Zm18 0-7 2 2 3 4-1ZM28 34h8l-4 5Z"/>
+  <path d="M32 38v4m-5-2 5 3 5-3" fill="none" stroke="#0c211b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

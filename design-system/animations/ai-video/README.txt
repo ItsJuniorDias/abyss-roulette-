@@ -73,8 +73,24 @@ alpha. It prepares 640x480 silent clips from the original green-screen videos.
 Green despill uses mix=1 to preserve the gold mane and cream wardrobe.
 Editing masters remain in output/ai-video and are not overwritten by publishing.
 
-The game selects a decodable alpha format, verifies a transparent corner and
-falls back to the poster if neither codec works. Welcome/win/loss return to idle
-on the video's ended event. Idle and spin loop. Reduced-motion preference uses
-the still poster. VP9 playback and transparency have been checked in the desktop
-browser; HEVC output still needs validation on a physical iPhone.
+The game selects a decodable alpha format and validates both visible character
+pixels and transparency before presenting a frame. Two persistent video decoders
+feed a single 640x480 canvas. The canvas retains each clip's last valid frame
+during buffering, seeking, decoder shutdown and native loop boundaries. State
+changes use a 300ms premultiplied crossfade within that canvas, without switching
+visible video layers or fading through the poster. Repeated state requests keep
+the same source/time and native loop. Welcome starts automatically (muted and
+inline); welcome/win/loss return to idle on ended. Idle and spin loop.
+
+Each scratch capture, alpha sample and final composition is explicitly cleared
+before drawing. Do not rely on composite "copy" to erase transparent pixels:
+the reported iPhone rendering path accumulated old silhouettes. Validated
+captures swap private buffers, preserving the last valid frame on failed/empty
+decodes. Clearing and drawing the visible canvas happen synchronously in the
+same animation callback; the browser never presents an intermediate clear.
+
+If autoplay is blocked, the current still/frame remains until a real interaction
+can resume playback. Reduced motion uses the poster. Regression coverage:
+  node --test scripts/test-mascot.mjs
+Physical iPhone validation remains required; desktop emulation does not validate
+the iOS hardware decoder/compositor.

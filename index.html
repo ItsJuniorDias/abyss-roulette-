@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="description" content="Aurum Club — Private Lounge. European roulette in a luxury 3D casino, played with demo credits." />
   <meta name="theme-color" content="#090d0c" />
-  <link rel="icon" href="./assets/luxury/crest.svg" />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
   <title>Aurum Club · Private Lounge</title>
 </head>
 <body>
@@ -18,7 +21,7 @@
     </header>
     <section id="stage" aria-label="Aurum and the roulette wheel">
       <div class="host-copy"><span class="eyebrow" id="host-eyebrow">AURUM · YOUR HOST</span><p id="host-message">Your table is ready.</p></div>
-      <div class="mascot-stage"><img id="mascot" src="./animations/ai/mascot-v1/poster.png" alt="Aurum, your lion host in a cream tuxedo" /><video id="mascot-video-a" muted playsinline preload="metadata" aria-hidden="true"></video><video id="mascot-video-b" muted playsinline preload="none" aria-hidden="true"></video></div>
+      <div class="mascot-stage"><img id="mascot" src="./animations/ai/mascot-v1/poster.png" alt="Aurum, your lion host in a cream tuxedo" /><canvas id="mascot-canvas" width="640" height="480" aria-hidden="true"></canvas><video id="mascot-video-a" autoplay muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video><video id="mascot-video-b" autoplay muted playsinline webkit-playsinline preload="metadata" aria-hidden="true"></video></div>
       <div id="wheel-viewport"><canvas id="gl" aria-label="European roulette in 3D"></canvas><span class="wheel-caption">EUROPEAN ROULETTE</span></div>
       <div id="banner" class="hidden" aria-hidden="true"><div class="sfx" id="sfx">ROUND RESULT</div><div class="result-row"><div class="num" id="bnum">17</div><div class="sub" id="bsub">+350</div></div></div>
     </section>
