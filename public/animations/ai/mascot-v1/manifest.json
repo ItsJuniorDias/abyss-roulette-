@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "framing": "waist-up",
+  "clips": {
+    "welcome": {
+      "duration": 5.25,
+      "size": [
+        640,
+        480
+      ],
+      "source": "output/ai-video/welcome/20261007T002028019806Z",
+      "source_sha256": "0a144193b930cb788714aa53b0ff148d450ffa06e38d23909fcc691728da541d",
+      "webm_bytes": 648062,
+      "hevc_bytes": 1025691,
+      "alpha": {
+        "passed": true,
+        "samples": [
+          {
+            "time": 0.0,
+            "transparent_fraction": 0.548095703125,
+            "opaque_fraction": 0.405517578125
+          },
+          {
+            "time": 2.625,
+            "transparent_fraction": 0.51416015625,
+            "opaque_fraction": 0.431640625
+          },
+          {
+            "time": 5.1,
+            "transparent_fraction": 0.548828125,
+            "opaque_fraction": 0.40576171875
+          }
+        ],
+        "visual_review_required": true,
+        "note": "Pixel alpha check only. Review mane, hands, waist anchor, shadows and loop continuity visually."
+      },
+      "audio": false
+    },
+    "idle": {
+      "duration": 5.25,
+      "size": [
+        640,
+        480
+      ],
+      "source": "output/ai-video/idle/20261007T002109030318Z",
+      "source_sha256": "d77954a5099528073b90027f96ac0457c35bc1931c4e64af19acbe226ded5450",
+      "webm_bytes": 489726,
+      "hevc_bytes": 954501,
+      "alpha": {
+        "passed": true,
+        "samples": [
+          {
+            "time": 0.0,
+            "transparent_fraction": 0.54833984375,
+            "opaque_fraction": 0.40576171875
+          },
+          {
+            "time": 2.625,
+            "transparent_fraction": 0.545166015625,
+            "opaque_fraction": 0.408203125
+          },
+          {
+            "time": 5.1,
+            "transparent_fraction": 0.54833984375,
+            "opaque_fraction": 0.4052734375
+          }
+        ],
+        "visual_review_required": true,
+        "note": "Pixel alpha check only. Review mane, hands, waist anchor, shadows and loop continuity visually."
+      },
+      "audio": false
+    },
+    "spin": {
+      "duration": 5.25,
+      "size": [
+        640,
+        480
+      ],
+      "source": "output/ai-video/spin/20261007T002147550140Z",
+      "source_sha256": "bb45a70a80bbd7d111d5f7023d96964ee98f3992ab8e4db3c7e78b57b0dda077",
+      "webm_bytes": 574884,
+      "hevc_bytes": 966691,
+      "alpha": {
+        "passed": true,
+        "samples": [
+          {
+            "time": 0.0,
+            "transparent_fraction": 0.548583984375,
+            "opaque_fraction": 0.406005859375
+          },
+          {
+            "time": 2.625,
+            "transparent_fraction": 0.56494140625,
+            "opaque_fraction": 0.389892578125
+          },
+          {
+            "time": 5.1,
+            "transparent_fraction": 0.548583984375,
+            "opaque_fraction": 0.406494140625
+          }
+        ],
+        "visual_review_required": true,
+        "note": "Pixel alpha check only. Review mane, hands, waist anchor, shadows and loop continuity visually."
+      },
+      "audio": false
+    },
+    "win": {
+      "duration": 5.25,
+      "size": [
+        640,
+        480
+      ],
+      "source": "output/ai-video/win/20261007T002223062323Z",
+      "source_sha256": "ad7ed444d34ffa9fc6dbf39805eaac41785075eeb845f10ea9c5036c207dbdb7",
+      "webm_bytes": 784224,
+      "hevc_bytes": 1048528,
+      "alpha": {
+        "passed": true,
+        "samples": [
+          {
+            "time": 0.0,
+            "transparent_fraction": 0.548583984375,
+            "opaque_fraction": 0.40625
+          },
+          {
+            "time": 2.625,
+            "transparent_fraction": 0.48779296875,
+            "opaque_fraction": 0.44921875
+          },
+          {
+            "time": 5.1,
+            "transparent_fraction": 0.548583984375,
+            "opaque_fraction": 0.40576171875
+          }
+        ],
+        "visual_review_required": true,
+        "note": "Pixel alpha check only. Review mane, hands, waist anchor, shadows and loop continuity visually."
+      },
+      "audio": false
+    },
+    "loss": {
+      "duration": 5.25,
+      "size": [
+        640,
+        480
+      ],
+      "source": "output/ai-video/loss/20261007T002318239216Z",
+      "source_sha256": "ec81cb4e16684ea082efa3c7caf6ee12bedb0724cce9d61ac546175248147976",
+      "webm_bytes": 615281,
+      "hevc_bytes": 983893,
+      "alpha": {
+        "passed": true,
+        "samples": [
+          {
+            "time": 0.0,
+            "transparent_fraction": 0.548095703125,
+            "opaque_fraction": 0.40576171875
+          },
+          {
+            "time": 2.625,
+            "transparent_fraction": 0.54736328125,
+            "opaque_fraction": 0.406005859375
+          },
+          {
+            "time": 5.1,
+            "transparent_fraction": 0.54833984375,
+            "opaque_fraction": 0.406005859375
+          }
+        ],
+        "visual_review_required": true,
+        "note": "Pixel alpha check only. Review mane, hands, waist anchor, shadows and loop continuity visually."
+      },
+      "audio": false
+    }
+  }
+}

@@ -1,0 +1,25 @@
+/* Aurum Club design tokens — mirrored in design-system/tokens.json. */
+:root {
+  --ink: #090d0c;
+  --surface: #0c271f;
+  --surface-raised: #123127;
+  --gold: #d8b66c;
+  --gold-light: #f9e3aa;
+  --gold-deep: #9d7737;
+  --cream: #f4eddf;
+  --muted: #b9b5a6;
+  --blood: #9e2435;
+  --teal: #147555;
+  --coal: #131c1a;
+  --warning: #ffc48b;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Manrope', sans-serif;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+  --radius-sm: 5px; --radius-md: 10px; --radius-lg: 14px;
+  --duration-fast: 180ms; --duration-standard: 300ms; --duration-scene: 500ms;
+  --ease-out: cubic-bezier(.4, 0, .2, 1);
+  --border-subtle: 1px solid #d8b66c30;
+  --shadow-panel: 0 0 0 4px #090e0de6, 0 0 0 5px #b98f483b, 0 -12px 70px #0007, inset 0 0 50px #0005;
+  font-family: var(--font-body); color-scheme: dark;
+}

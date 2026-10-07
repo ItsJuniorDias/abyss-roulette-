@@ -3,55 +3,24 @@
 //   cp .env.example .env   # add your OPENROUTER_API_KEY
 //   npm run gen:assets              -> generates every asset that doesn't exist yet
 //   npm run gen:assets -- --force   -> regenerates all of them
-//   npm run gen:assets -- emblem    -> generates only the "emblem" asset
+//   npm run gen:assets -- lounge    -> generates only the "lounge" asset
 //
-// Images go to public/assets/*.png, plus a compressed *.webp when cwebp is on PATH.
+// Images go to public/assets/luxury/*.png, plus a compressed *.webp when cwebp is on PATH.
 // The game loads the WebP first and falls back to the PNG.
 // If a file is missing, the game falls back to its procedural (canvas) version.
 
 import { spawnSync } from 'node:child_process';
-import { mkdir, writeFile, access } from 'node:fs/promises';
+import { mkdir, writeFile, access, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const API_KEY = process.env.OPENROUTER_API_KEY;
 const MODEL = process.env.OPENROUTER_IMAGE_MODEL || 'google/gemini-2.5-flash-image';
-const OUT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'assets');
+const OUT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'assets', 'luxury');
 
-const STYLE =
-  'Art style: Mike Mignola-inspired comic art. Extremely heavy solid black shadows (chiaroscuro), ' +
-  'flat unshaded color fields, bold brush-ink linework, angular gothic shapes, limited palette of ' +
-  'blood crimson (#b3191c), mustard ochre (#d9a23a), muted teal (#2b6b60), bone white (#efe3c4) and pure black. ' +
-  'Pulp occult mood. No text, no letters, no watermark, no signature, no characters from existing franchises.';
-
+const artDirection = JSON.parse(await readFile(new URL('../design-system/art-direction.json', import.meta.url), 'utf8'));
 const ASSETS = {
-  background: {
-    aspect: '16:9',
-    prompt:
-      'Wide establishing shot of an ancient gothic crypt interior at night seen straight on. ' +
-      'Massive flat blood-red full moon disc in the center top, framed by black stone arches and pillars in silhouette. ' +
-      'Hanging chains, candles with tiny ochre flames, a few skulls in niches. The center bottom third is empty dark ' +
-      'floor (a roulette wheel will be placed there). ' + STYLE,
-  },
-  emblem: {
-    aspect: '1:1',
-    prompt:
-      'A perfectly circular occult sigil medallion seen flat from the front, centered on a pure black background. ' +
-      'Concentric rings of strange rune-like glyphs (invented, not real letters), a stylized horned skull at the center, ' +
-      'thick black ink outlines, crimson and ochre flat fills. Symmetric, graphic, iconic. ' + STYLE,
-  },
-  felt: {
-    aspect: '1:1',
-    prompt:
-      'Seamless tileable texture of worn dark crimson velvet cloth with subtle hand-inked crosshatching ' +
-      'and a faint ochre gothic damask pattern. Flat top-down view, even lighting, no perspective. ' + STYLE,
-  },
-  wood: {
-    aspect: '1:1',
-    prompt:
-      'Seamless tileable texture of dark carved ebony wood with oxblood red lacquer, drawn as comic art: ' +
-      'bold black ink grain lines, flat color, minimal gradients. Flat top-down view. ' + STYLE,
-  },
+  lounge: { aspect: '16:9', prompt: artDirection.assets.find(asset => asset.file === 'lounge.png').prompt },
 };
 
 async function exists(p) {
@@ -64,7 +33,7 @@ async function generate(name, { prompt, aspect }) {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
       'Content-Type': 'application/json',
-      'X-Title': 'Abyss Roulette',
+      'X-Title': 'Aurum Club',
     },
     body: JSON.stringify({
       model: MODEL,

@@ -4,11 +4,11 @@
 // no audio files or before they finish loading.
 //
 // Mix: three buses (music / ambience / sfx) -> soft compressor -> master (mute).
-// Music streams through <audio> elements; everything else is decoded into AudioBuffers.
+// Original lounge chords are synthesized; physical roulette sounds use AudioBuffers.
 
 const BASE = `${import.meta.env.BASE_URL}audio/`;
-const MIX = { music: 0.42, amb: 0.55, sfx: 0.95 };
-const MUTE_KEY = 'abyss-roulette:muted';
+const MIX = { music: 0.23, amb: 0.25, sfx: 0.8 };
+const MUTE_KEY = 'aurum-club:muted';
 
 let ac = null;
 let master, comp, noiseBuf;
@@ -17,7 +17,6 @@ const buffers = {};
 let manifest = {};
 let started = false;
 let muted = readMuted();
-let music = null;
 let tension = null;
 let musicRestore = 0;
 
@@ -25,7 +24,7 @@ let musicRestore = 0;
 try { if ('audioSession' in navigator) navigator.audioSession.type = 'playback'; } catch { /* not supported */ }
 
 function readMuted() {
-  try { return localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
+  try { return (localStorage.getItem(MUTE_KEY) ?? localStorage.getItem('abyss-roulette:muted')) === '1'; } catch { return false; }
 }
 
 export function audio() {
@@ -50,7 +49,6 @@ export function audio() {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) ac.suspend();
       else ac.resume();
-      if (music) music.el.forEach((el) => { if (document.hidden) el.pause(); else if (el.dataset.active) el.play().catch(() => {}); });
     });
   }
   // iOS can also leave the context 'interrupted' (after a call, Siri, backgrounding)
@@ -105,33 +103,30 @@ function loop(slot, { vol = 1, to = 'amb', fadeIn = 2 } = {}) {
   return { src: s, gain: g };
 }
 
-// ---------- music playlist (streamed, crossfaded) ----------
-// Safari only lets a media element play from script once it has played inside a user
-// gesture. primeMusic() runs inside the first gesture and plays a silent clip on both
-// players, so startMusic() can start the real tracks later, after the manifest loads.
-function silentClip() {
-  const n = 441, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
-  const str = (o, t) => [...t].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
-  str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVE'); str(12, 'fmt ');
-  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
-  v.setUint32(24, 44100, true); v.setUint32(28, 88200, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
-  str(36, 'data'); v.setUint32(40, n * 2, true);
-  return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
-}
-
-let players = null;
-function primeMusic() {
-  const silent = silentClip();
-  players = [new Audio(), new Audio()].map((e) => {
-    e.preload = 'auto';
-    e.playsInline = true;
-    e.src = silent;
-    e.play().then(() => { if (!e.dataset.active) e.pause(); }).catch(() => {});
-    const g = ac.createGain();
-    g.gain.value = 0;
-    ac.createMediaElementSource(e).connect(g).connect(bus.music);
-    return { e, g };
+// ---------- original lounge accompaniment (no external music samples) ----------
+function pianoNote(midi, when, duration = 2.4, volume = .11, destination = 'music') {
+  const frequency = 440 * 2 ** ((midi - 69) / 12);
+  [1, 2, 3].forEach((harmonic, i) => {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = frequency * harmonic;
+    g.gain.setValueAtTime(.0001, when);
+    g.gain.exponentialRampToValueAtTime(volume / (harmonic * harmonic), when + .018);
+    g.gain.exponentialRampToValueAtTime(.0001, when + duration / (1 + i * .25));
+    o.connect(g).connect(bus[destination]); o.start(when); o.stop(when + duration);
+    o.onended = () => { o.disconnect(); g.disconnect(); };
   });
+}
+function startLounge() {
+  const chords = [[48, 55, 59, 64], [45, 52, 55, 59], [50, 57, 60, 64], [43, 53, 59, 64]];
+  let next = ac.currentTime + .1, bar = 0;
+  setInterval(() => {
+    if (ac.state !== 'running' || document.hidden || next > ac.currentTime + .2) return;
+    next = Math.max(next, ac.currentTime + .02);
+    const chord = chords[bar++ % chords.length];
+    chord.forEach((note, i) => pianoNote(note, next + i * .065, 3.4, .09));
+    pianoNote(chord[2] + 12, next + 1.35, 1.7, .05);
+    next += 3.2;
+  }, 150);
 }
 
 // iOS also needs a sound started inside the gesture before the context makes noise.
@@ -142,62 +137,26 @@ function unlockOutput() {
   s.start();
 }
 
-function startMusic() {
-  const tracks = Object.entries(manifest).filter(([, v]) => v.kind === 'music').map(([, v]) => BASE + v.file);
-  if (!tracks.length || !players) return;
-  const XF = 4;
-  const el = players.map((p) => p.e);
-  const gain = players.map((p) => p.g);
-  let next = 0, cur = 0;
-  const start = (k) => {
-    const e = el[k];
-    e.src = tracks[next++ % tracks.length];
-    e.currentTime = 0;
-    e.dataset.active = '1';
-    e.dataset.handed = '';
-    e.play().catch(() => {});
-    ramp(gain[k].gain, 1, XF);
-    cur = k;
-  };
-  el.forEach((e, k) => {
-    e.addEventListener('timeupdate', () => {
-      if (k !== cur || e.dataset.handed || !e.duration) return;
-      if (e.duration - e.currentTime < XF) {
-        e.dataset.handed = '1';
-        ramp(gain[k].gain, 0, XF);
-        setTimeout(() => { e.pause(); e.dataset.active = ''; }, XF * 1000 + 200);
-        start(1 - k);
-      }
-    });
-  });
-  start(0);
-  music = { el, gain };
-}
-
 // Call from every user gesture. The first one unlocks audio, then loads the manifest,
 // starts the music right away and the ambience as soon as each loop is decoded.
 export function start() {
   audio();
   if (started) {
     // if a browser still blocked a play() that ran after an await, retry on this gesture
-    music?.el.forEach((e) => { if (e.dataset.active && e.paused && !document.hidden) e.play().catch(() => {}); });
     return;
   }
   started = true;
   unlockOutput();
-  primeMusic();
+  startLounge();
   boot();
 }
 
 async function boot() {
   if (!(await loadManifest())) return;
-  startMusic();
-  const slots = Object.keys(manifest).filter((k) => manifest[k].kind !== 'music');
-  const amb = [['amb_crypt_loop', 0.55], ['amb_candle_fire_loop', 0.35]];
-  await Promise.all([
-    ...amb.map(([slot, vol]) => manifest[slot] && loadBuffer(slot).then(() => loop(slot, { vol, fadeIn: 4 }))),
-    ...slots.filter((k) => !amb.some(([a]) => a === k)).map(loadBuffer),
-  ]);
+  // Only the physical roulette/chip samples belong to the new sound direction.
+  const slots = ['sfx_chip_place', 'sfx_chip_stack_clear', 'sfx_wheel_spin_start',
+    'sfx_ball_roll_loop', 'sfx_ball_deflector', 'sfx_ball_hit_a', 'sfx_ball_hit_b', 'sfx_ball_settle'];
+  await Promise.all(slots.filter(slot => manifest[slot]).map(loadBuffer));
 }
 
 // ---------- mute ----------
@@ -230,19 +189,8 @@ function synthWhoosh() {
   const s = ac.createBufferSource(); s.buffer = noiseBuf;
   const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 6;
   f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(2400, t + 0.35); f.frequency.exponentialRampToValueAtTime(200, t + 1.2);
-  const g = ac.createGain(); env(g, t, 0.15, 0.5, 1.3);
+  const g = ac.createGain(); env(g, t, 0.15, 0.12, 1.3);
   s.connect(f).connect(g).connect(bus.sfx); s.start(t); s.stop(t + 1.4);
-}
-
-function synthGong(win) {
-  const t = ac.currentTime;
-  const base = win ? 98 : 73;
-  const parts = win ? [1, 1.5, 2.01, 2.76, 4.1] : [1, 2.4];
-  parts.forEach((m, i) => {
-    const o = ac.createOscillator(); o.type = i ? 'sine' : 'triangle'; o.frequency.value = base * m;
-    const g = ac.createGain(); env(g, t, 0.01, (win ? 0.28 : 0.2) / (i + 1), win ? 3.5 : 1.4);
-    o.connect(g).connect(bus.sfx); o.start(t); o.stop(t + 3.6);
-  });
 }
 
 const jitter = (amt = 0.06) => 1 + (Math.random() * 2 - 1) * amt;
@@ -268,7 +216,7 @@ export function spinStart() {
   if (!play('sfx_wheel_spin_start', { vol: 0.75 })) synthWhoosh();
   // duck the music a little while the ball is live (and cancel a pending restore from the last round)
   clearTimeout(musicRestore);
-  if (music) ramp(bus.music.gain, MIX.music * 0.65, 0.8);
+  ramp(bus.music.gain, MIX.music * 0.65, 0.8);
   if (has('music_spin_tension')) tension = play('music_spin_tension', { vol: 0.7, to: 'music' });
 }
 
@@ -318,23 +266,10 @@ export function result(kind) {
   audio();
   if (tension) { ramp(tension.gain.gain, 0, 0.6); tension.src.stop(ac.currentTime + 1.5); tension = null; }
   clearTimeout(musicRestore);
-  if (music) musicRestore = setTimeout(() => ramp(bus.music.gain, MIX.music, 2.5), kind === 'bigwin' ? 3500 : 1500);
+  musicRestore = setTimeout(() => ramp(bus.music.gain, MIX.music, 2.5), kind === 'bigwin' ? 3500 : 1500);
 
-  if (kind === 'lose') {
-    if (!play('sfx_lose_thud', { vol: 0.8 })) synthGong(false);
-    return;
-  }
-  const bell = play('sfx_win_hit', { vol: kind === 'bigwin' ? 0.8 : 0.9 });
-  if (!bell) synthGong(true);
-  play('music_win_jingle', { vol: 0.5, delay: 0.07, to: 'music' });
-  if (kind === 'bigwin') {
-    if (music) ramp(bus.music.gain, MIX.music * 0.25, 0.2);
-    play('sfx_bigwin_impact', { vol: 1 });
-    play('music_bigwin_stinger', { vol: 0.75, to: 'music' });
-  }
-  sweep(kind === 'bigwin' ? 1.2 : 0.7);
-}
-
-export function ember(strength = 1) {
-  play('sfx_ember_whoosh', { vol: 0.55 * strength, rate: jitter(0.08) });
+  if (kind === 'lose') { pianoNote(55, ac.currentTime, .45, .07, 'sfx'); return; }
+  const notes = kind === 'bigwin' ? [72, 76, 79, 83, 86] : [72, 76, 79];
+  notes.forEach((note, i) => pianoNote(note, ac.currentTime + i * .11, 1.6, .13, 'sfx'));
+  sweep(.65);
 }

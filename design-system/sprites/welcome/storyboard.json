@@ -1,0 +1,43 @@
+{
+  "name": "Aurum — boas-vindas",
+  "stage": "Storyboard de poses principais; ainda não é um spritesheet de reprodução",
+  "source": "key-poses-v1.png",
+  "generationTool": "image_gen integrado",
+  "reference": "../../assets/originals/aurum-welcome.png",
+  "transparentBackground": true,
+  "readingOrder": "Esquerda para direita, linha superior e depois linha inferior",
+  "poses": [
+    {
+      "id": 1,
+      "name": "Repouso",
+      "action": "Braços baixos, ficha junto ao quadril, expressão relaxada."
+    },
+    {
+      "id": 2,
+      "name": "Contato visual",
+      "action": "Olhar encontra o jogador; cabeça inclina e sobrancelhas respondem."
+    },
+    {
+      "id": 3,
+      "name": "Antecipação",
+      "action": "Sorriso aparece, tronco inclina, cotovelo começa a abrir."
+    },
+    {
+      "id": 4,
+      "name": "Abertura",
+      "action": "Antebraço sobe e a palma gira para cima."
+    },
+    {
+      "id": 5,
+      "name": "Convite",
+      "action": "Braço aberto apresenta a mesa, sorriso amplo e inclinação de cortesia."
+    },
+    {
+      "id": 6,
+      "name": "Acomodação",
+      "action": "Braço relaxa um pouco e o tronco volta ao apoio."
+    }
+  ],
+  "nextProductionStep": "Normalizar o pivô dos pés, separar quadros e desenhar os intermediários com continuidade de rosto, mãos, juba e joias.",
+  "prompt": "Use case: identity-preserve / sprite animation key-pose sheet.\nAsset type: SIX KEY POSES for a frame-by-frame sprite animation, NOT a single static character translated around.\nReference image: the approved AURUM lion casino host. Preserve his recognizable adult lion face, golden fur, voluminous groomed mane, amber eyes, cream tuxedo jacket with black satin lapels, black shirt and trousers, gold bow tie, chunky gold chain with diamond pendant, gold watch and polished black gold-buckle loafers. Keep the same high-end stylized 3D animated-feature look, same material detail and soft warm studio lighting.\n\nCreate a square 3072 x 3072 production-style sprite concept sheet with exactly 3 columns and 2 rows, SIX separate full-body drawings on transparent alpha. All cells equally sized. Each lion takes up at most 80% of its cell height and 80% of its cell width, with the same feet baseline, same camera, same apparent body scale and same body position. The full mane, hands, shoes and tail must stay within each cell. Do not overlap cells. NO cell borders, NO text, NO numbering, NO backgrounds, NO ground shadow, NO glowing backdrop. Generous transparent gaps.\n\nStory: Aurum notices the player and naturally welcomes them to the casino table with his LEFT arm (the arm on VIEWER RIGHT, wearing the gold watch). His RIGHT hand (viewer left) keeps one black-and-gold chip LOW near his hip throughout all six poses. Feet stay planted in the same relaxed standing stance. The action comes from actual articulation of the neck, face, shoulders, elbow, wrist and torso.\n\nREADING ORDER left-to-right, top row then bottom row:\n1 top-left: REST. Both arms lowered and relaxed, right hand holds the chip low beside hip, mouth relaxed with very slight closed smile, eyes looking slightly aside. Left hand relaxed near left thigh.\n2 top-middle: NOTICE. Same low hands, eyes shift directly to player, head turns toward camera and tilts just slightly, eyebrows lift. A subtle inhalation lifts chest.\n3 top-right: ANTICIPATION. Smile develops visibly. Torso dips forward slightly. Left elbow bends and left hand rises to waist level, palm starts rotating upward. Right hand keeps chip LOW.\n4 bottom-left: OPENING. Left elbow lifts away from body, left forearm travels out toward viewer right, palm turned up halfway through presenting gesture. Warm open-mouth smile. Torso rotates a little toward the offered hand.\n5 bottom-middle: PRESENTATION APEX. Left arm extends gracefully toward viewer right at lower-chest height, open palm clearly presenting an unseen table. Expressive broad welcoming smile and direct eye contact, slight courteous forward lean. Right chip hand remains low.\n6 bottom-right: SETTLE. Left arm relaxes down a little from the apex, elbow softens, palm remains open. Torso returns upright, head nod finishes, smile relaxes into confident friendly expression. Mane, necklace and jacket hems subtly settle after the gesture.\n\nThe six frames must have CLEARLY DIFFERENT articulated poses with the progressive hand trajectory easy to read. Frame 1 hand at thigh, frame 3 at waist, frame 4 halfway open, frame 5 fully presenting, frame 6 relaxed presentation. Keep face, clothing, proportions and light consistent. Adult sophisticated luxury host. No other characters, props except that one chip, typography, scenery, confetti or watermark. True transparent background."
+}

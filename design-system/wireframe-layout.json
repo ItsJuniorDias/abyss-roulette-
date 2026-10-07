@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "status": "approved wireframe implemented in the production game",
+  "preview": "/wireframe.html",
+  "orientation": "portrait",
+  "baselineViewport": [
+    390,
+    844
+  ],
+  "compactViewport": [
+    360,
+    640
+  ],
+  "regions": [
+    "header",
+    "shared lion and roulette stage",
+    "recent results",
+    "quick bets",
+    "chips and spin"
+  ],
+  "mascot": {
+    "gameplayFraming": "waist up",
+    "fixedAcrossStates": [
+      "identity",
+      "cream tuxedo",
+      "mane",
+      "jewelry",
+      "chip hand",
+      "camera angle",
+      "lighting",
+      "face scale",
+      "waist anchor"
+    ],
+    "performance": "Keep expressive eyes, shoulders and both hands within the safe frame; preserve margins for the mane. Produce animations specifically for this crop.",
+    "fullBody": "reserved for a separate introductory scene",
+    "currentPreview": "five generated continuous AI videos integrated with transparent VP9 and HEVC exports; static poster fallback",
+    "generationFollowUp": "Completed outputs reviewed and published locally with scripts/publish_animations.py; no additional API generation required.",
+    "runtimeAssets": "public/animations/ai/mascot-v1/"
+  },
+  "states": [
+    "welcome",
+    "idle",
+    "spin",
+    "win",
+    "loss"
+  ],
+  "result": "one lion remains in place; result is shown alongside it",
+  "betting": {
+    "primary": "nine quick bets with at least 44px touch targets",
+    "expanded": "bottom sheet with all 37 numbers, 3 columns, 3 dozens and 6 outside bets",
+    "scroll": "inside expanded table only on compact screens",
+    "simulation": "Production demo uses random European roulette outcomes, settlement and saved play credits; wireframe remains illustrative."
+  },
+  "background": {
+    "asset": "public/assets/luxury/lounge-portrait-v2.png",
+    "size": [
+      941,
+      1672
+    ],
+    "mode": "active production background; optional preview in wireframe",
+    "prompt": "design-system/background-v2-prompt.txt"
+  },
+  "game": "/"
+}

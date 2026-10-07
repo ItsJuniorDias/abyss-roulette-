@@ -1,56 +1,51 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="Abyss Roulette: a 3D European roulette game drawn like a gothic comic. Demo credits only." />
-    <meta name="theme-color" content="#0b0807" />
-    <meta property="og:title" content="Abyss Roulette" />
-    <meta property="og:description" content="3D European roulette in a hard-inked gothic comic style." />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23b3191c' stroke='%23000' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%231b1514' stroke='%23d9a23a' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23efe3c4'/%3E%3C/svg%3E" />
-    <title>Abyss Roulette</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="bg"></div>
-    <canvas id="gl"></canvas>
-    <div id="grain"></div>
-    <div id="vig"></div>
-    <div id="flash"></div>
-
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="description" content="Aurum Club — Private Lounge. European roulette in a luxury 3D casino, played with demo credits." />
+  <meta name="theme-color" content="#090d0c" />
+  <link rel="icon" href="./assets/luxury/crest.svg" />
+  <title>Aurum Club · Private Lounge</title>
+</head>
+<body>
+  <main id="game-shell">
+    <div id="bg" aria-hidden="true"></div><div id="ambient-shade" aria-hidden="true"></div>
     <header id="top">
-      <div class="title">Abyss Roulette<small>EUROPEAN · 37 POCKETS</small></div>
-      <div class="hud">
-        <div class="box stat" id="balbox"><span>BALANCE</span><b id="balance">1000</b></div>
-        <div class="box stat"><span>TOTAL BET</span><b id="staked">0</b></div>
-        <button class="box stat mute" id="mute" aria-pressed="false" title="Sound (M)"><span>SOUND</span><b>ON</b></button>
-      </div>
+      <div class="brand" aria-label="Aurum Club"><div class="title">AURUM<span>PRIVATE ROULETTE</span></div></div>
+      <div class="stat" id="balbox"><span>PLAY BALANCE</span><div><b id="balance">1,000</b></div></div>
+      <button class="icon-button" id="menu-open" aria-label="Open table menu" aria-haspopup="dialog">☰</button>
     </header>
-    <div id="history" aria-label="Last results"></div>
-    <div id="sr" class="sr-only" aria-live="polite"></div>
-
-    <div id="banner" class="hidden" aria-hidden="true">
-      <div class="sfx" id="sfx">KRA-THOOM!</div>
-      <div class="num" id="bnum">17</div>
-      <div class="sub" id="bsub">+350</div>
-    </div>
-
-    <section id="panel">
-      <div id="msg" role="status"></div>
-      <div id="boardWrap"><div id="board" role="group" aria-label="Betting table"></div></div>
-      <div id="controls">
-        <div id="chips"></div>
-        <button class="btn" id="undo" title="Undo last chip (Z)">UNDO</button>
-        <button class="btn" id="clear" title="Clear all bets (C)">CLEAR</button>
-        <button class="btn" id="repeat" title="Repeat last bets (R)">REBET</button>
-        <button class="btn refill" id="refill" hidden>REFILL</button>
-        <button class="btn spin" id="spin" title="Spin (Space)">SPIN</button>
-      </div>
-      <div class="legal">Demo credits · prototype · play responsibly</div>
+    <section id="stage" aria-label="Aurum and the roulette wheel">
+      <div class="host-copy"><span class="eyebrow" id="host-eyebrow">AURUM · YOUR HOST</span><p id="host-message">Your table is ready.</p></div>
+      <div class="mascot-stage"><img id="mascot" src="./animations/ai/mascot-v1/poster.png" alt="Aurum, your lion host in a cream tuxedo" /><video id="mascot-video-a" muted playsinline preload="metadata" aria-hidden="true"></video><video id="mascot-video-b" muted playsinline preload="none" aria-hidden="true"></video></div>
+      <div id="wheel-viewport"><canvas id="gl" aria-label="European roulette in 3D"></canvas><span class="wheel-caption">EUROPEAN ROULETTE</span></div>
+      <div id="banner" class="hidden" aria-hidden="true"><div class="sfx" id="sfx">ROUND RESULT</div><div class="result-row"><div class="num" id="bnum">17</div><div class="sub" id="bsub">+350</div></div></div>
     </section>
-
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <aside id="history-panel" aria-label="Recent results"><span class="eyebrow">RECENT</span><div id="history"></div><span id="history-empty">Your first spin awaits.</span><span class="demo-badge">DEMO</span></aside>
+    <section id="panel" aria-label="Betting controls">
+      <div class="table-heading"><h1>Place your bets</h1><button id="full-table-open" class="text-button" aria-haspopup="dialog">Full table ↗</button></div>
+      <div id="quick-board" role="group" aria-label="Quick bets"></div>
+      <div class="chip-picker"><span class="control-label">CHIP</span><div id="chips" role="group" aria-label="Chip value"></div><button class="text-button" id="clear" title="Clear bets (C)">Clear</button></div>
+      <div id="controls"><div class="stat stake-stat"><span>TOTAL BET</span><b id="staked">0</b></div><button class="btn spin" id="spin" title="Spin the wheel (Space)">SPIN THE WHEEL <span aria-hidden="true">↗</span></button><button class="btn refill" id="refill" hidden>+ CREDITS</button></div>
+      <div id="msg" role="status"></div><div class="table-footer">Play credits · Play responsibly</div>
+    </section>
+    <div class="home-area" aria-hidden="true"><span></span></div>
+    <div id="vig" aria-hidden="true"></div><div id="flash" aria-hidden="true"></div>
+    <div id="sheet-backdrop" hidden></div>
+    <section id="table-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="table-title" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div><header class="sheet-heading"><div><span class="eyebrow">37 POCKETS · SINGLE ZERO</span><h2 id="table-title">Full table</h2></div><button class="icon-button" data-close-sheet aria-label="Close full table">×</button></header>
+      <div id="boardWrap" tabindex="0" aria-label="Scroll betting table"><div id="board" role="group" aria-label="All roulette bets"></div></div>
+      <footer class="sheet-footer"><div><span>TOTAL BET</span><b id="sheet-staked">0</b></div><button class="btn" id="table-done">Done · Back to stage</button></footer>
+    </section>
+    <section id="menu-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="menu-title" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div><header class="sheet-heading"><h2 id="menu-title">Your table</h2><button class="icon-button" data-close-sheet aria-label="Close table menu">×</button></header>
+      <div class="table-actions"><button class="btn" id="undo" title="Undo last chip (Z)">↶ Undo last chip</button><button class="btn" id="repeat" title="Repeat bets (R)">↻ Repeat last bets</button><button class="btn mute" id="mute" aria-pressed="false" title="Toggle sound (M)">Sound <b>ON</b></button></div>
+      <p class="menu-note">European roulette · 37 pockets<br>Place a chip on a number or an outside bet.<br>Play credits only. No real money.</p>
+    </section>
+    <div id="sr" class="sr-only" aria-live="polite"></div>
+  </main>
+  <div id="rotate-hint" role="status"><span aria-hidden="true">↻</span><h2>Made for portrait mode.</h2><p>Rotate your phone upright to play.</p></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>

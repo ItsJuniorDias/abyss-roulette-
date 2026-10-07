@@ -1,0 +1,23 @@
+{
+  "brand": "Aurum Club",
+  "status": "Aurum Club; mascote leão aprovado pelo usuário.",
+  "tool": "Built-in image_gen",
+  "date": "2026-10-06",
+  "assets": [
+    {
+      "file": "lounge.png",
+      "role": "Cenário",
+      "prompt": "Use case: stylized-concept. Asset type: full-screen background artwork for an interactive 3D roulette game. Primary request: a lavish luxury VIP casino, ostentatious and glamorous. A grand symmetrical Art Deco casino salon with polished black marble columns edged in gold, huge tiered crystal chandeliers, bronze arches, champagne-gold light, dark emerald velvet seating and distant casino tables along the sides. Style: beautiful premium stylized 3D animated-film environment, smooth dimensional materials, rich golden reflections, cinematic but inviting; suitable for expressive cartoon 3D characters in fashionable urban clothes. Composition: wide 16:9 landscape, centered perspective from slightly above a roulette player's eye level. Architecture and chandeliers occupy upper half and outer edges, center lower half is an empty, softly lit dark emerald / black foreground where the interactive wheel will be composited. NO foreground roulette wheel, no people, no words, no logo, no watermarks, no UI. Palette black, warm polished gold, emerald, cream highlights. Lighting: luminous gold chandelier crystals with controlled bloom, readable detailed architecture, deep shadows, subtle depth of field. Avoid horror, skulls, flames, occult symbols, red moon, heavy ink outlines."
+    },
+    {
+      "file": "aurum-welcome.png",
+      "role": "Mascote aprovado, corpo inteiro",
+      "prompt": "Use case: stylized-concept. Asset type: alternative luxury casino mascot design, full body character cutout with truly transparent alpha background. Create AURUM, an original adult anthropomorphic golden lion who hosts an ostentatious luxury casino. Charismatic charming confident smile, golden amber eyes, magnificent voluminous groomed golden-brown mane, appealing expressive adult face. Premium stylized 3D animated feature-film character, slightly oversized expressive head, beautifully rendered fur and dimensional material details, friendly and sophisticated, never aggressive. Outfit: impeccably tailored cream dinner jacket with shiny black satin lapels, black shirt, gold bow tie, black tailored trousers, polished black loafers with gold buckles, chunky gold necklace with unlettered diamond-shaped pendant and a gold wristwatch. Relaxed three-quarter standing pose toward camera, one hand adjusting his lapel, other presenting one black-and-gold roulette chip. Full head, mane, shoes, hands and tail visible, generous margin, clean silhouette. Studio soft warm key and gold rim light, on TRANSPARENT alpha, no scenery or background, no floor, no fake black or checkered background. No text, logo, letters, watermark. Adult luxury entertainment brand mascot, polished 3D, warm charisma and wealth."
+    },
+    {
+      "file": "aurum-win.png",
+      "role": "Mascote aprovado, comemoração",
+      "prompt": "Use case: identity-preserve. Asset type: transparent victory mascot illustration for a luxury casino game. Reference image is AURUM, the approved adult golden lion casino host. Preserve his exact recognizable golden feline face, expressive amber eyes, magnificent full groomed golden-brown mane, cream dinner jacket, black satin lapels and black shirt, gold bow tie, gold chain with diamond-shaped pendant and gold watch. Change pose to a classy delighted celebration, waist-up portrait, looking at camera with broad warm smile, one hand lifted holding a single black-and-gold roulette chip, the other hand open in a welcoming gesture. Both hands and entire mane fully in frame, ample margin. Same premium expressive stylized 3D animation style and adult proportions as reference, beautifully rendered fur, fabric and jewelry, sophisticated and confident. Isolate on a real fully transparent alpha background, no scenery or colored background, no halo, no panel. Soft studio warm light and gold rim light. No text, letters, logo, watermarks, extra characters or drinks."
+    }
+  ]
+}

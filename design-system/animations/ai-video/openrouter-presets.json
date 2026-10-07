@@ -1,0 +1,34 @@
+{
+  "model": "heygen/heygen-video-1",
+  "reference": "design-system/assets/originals/aurum-bust-reference-green-v1.png",
+  "common_prompt": "A single continuous waist-up performance of the EXACT lion in the first frame, for a mobile casino game overlay. Preserve his exact face, golden mane, cream tuxedo, black shirt and lapels, gold bow tie, necklace, diamond pendant, watch and black-and-gold chip in the SAME hand at viewer left. The other hand is the free acting hand. Locked eye-level camera, constant warm upper-left lighting and identical face scale, body angle and waist anchor throughout. No zoom, cuts, reframing, legs, feet or tail. Keep his whole mane and both hands inside the canvas with safe margins. The waist stays intersecting the bottom edge. The background remains uniformly bright green (#00FF00), without scenery, gradients, shadows, green reflections, particles, text or speech. Use natural anticipation, small arcs, believable shoulder and chest weight, delayed mane response and gentle settling. Do not change his proportions, wardrobe, jewelry, chip, hand anatomy or facial design. Begin from the reference pose and settle back toward that same pose at the end for continuity between clips.",
+  "animations": {
+    "welcome": {
+      "duration": 5,
+      "loop_requested": false,
+      "motion": "Notice the viewer with one subtle breath and a friendly head tilt. From 1 to 3 seconds, open the free hand in a small elegant invitation at chest level; shoulder, elbow, wrist and fingers follow in a natural arc. Keep the chip hand steady. Settle back toward the reference pose by the final second. Keep the waist anchored and the gesture within the frame."
+    },
+    "idle": {
+      "duration": 5,
+      "loop_requested": true,
+      "motion": "One quiet breathing cycle, one natural blink and a tiny relaxed head adjustment. Keep both hands near their reference positions and the waist stationary. The mane responds very subtly to the chest movement. Return toward the exact starting breath phase, pose and gaze for a potential seamless loop. No welcoming or celebratory gesture."
+    },
+    "spin": {
+      "duration": 5,
+      "loop_requested": true,
+      "motion": "Quiet anticipation while following a roulette wheel off-screen to the viewer right. The eyes track first, the head follows in a small arc, eyebrows lift briefly, and the free fingers draw together near the chest. No broad pointing or greeting. Preserve the anchored waist and chip hand. Return gently toward the starting gaze and pose for a potential loop."
+    },
+    "win": {
+      "duration": 5,
+      "loop_requested": false,
+      "motion": "A restrained joyful host celebration: a small anticipation dip of the shoulders, then lift the chest slightly, brighten the smile and raise the free hand into one modest celebratory fist near chest level. Follow with one satisfied nod and settle back toward the reference pose. The waist stays anchored; no jump, no confetti, no added objects. Mane and jacket settle with slight delay."
+    },
+    "loss": {
+      "duration": 5,
+      "loop_requested": false,
+      "motion": "A discreet, empathetic response to a round without a payout. Briefly soften the smile, lower the gaze, take a calm breath and give one small reassuring nod, then return to the reference expression and pose. Keep hands composed, chip secure and waist anchored. No celebration, sadness exaggeration, mocking, beckoning or encouragement to chase losses."
+    }
+  },
+  "reference_mode": "green_first_frame",
+  "aspect_ratio": "4:3"
+}

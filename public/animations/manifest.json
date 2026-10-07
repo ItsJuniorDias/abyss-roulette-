@@ -1,0 +1,37 @@
+{
+  "type": "2D cutout",
+  "width": 512,
+  "height": 768,
+  "fps": 24,
+  "alpha": true,
+  "states": {
+    "idle": {
+      "duration": 4,
+      "loop": true,
+      "video": "aurum-idle.webm",
+      "fallback": "aurum-idle.webp",
+      "poster": "../assets/luxury/mascot-welcome.webp"
+    },
+    "welcome": {
+      "duration": 2.5,
+      "loop": false,
+      "video": "aurum-welcome.webm",
+      "fallback": "aurum-welcome.webp",
+      "poster": "../assets/luxury/mascot-welcome.webp"
+    },
+    "spin": {
+      "duration": 3,
+      "loop": true,
+      "video": "aurum-spin.webm",
+      "fallback": "aurum-spin.webp",
+      "poster": "../assets/luxury/mascot-welcome.webp"
+    },
+    "win": {
+      "duration": 3,
+      "loop": false,
+      "video": "aurum-win.webm",
+      "fallback": "aurum-win.webp",
+      "poster": "../assets/luxury/mascot-win.webp"
+    }
+  }
+}

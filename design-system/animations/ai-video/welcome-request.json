@@ -1,0 +1,18 @@
+{
+  "name": "Aurum — boas-vindas em vídeo gerado por IA",
+  "status": "prepared_not_generated",
+  "approach": "image-to-video; continuous generated motion; no sprite sequence",
+  "reference": "design-system/assets/originals/aurum-welcome.png",
+  "providerCandidate": "Runway",
+  "providerConnection": "not_confirmed",
+  "requestedDurationSeconds": 5,
+  "requestedAspectRatio": "9:16",
+  "prompt": "Locked-off camera, full-body luxury casino lion mascot matching the provided reference exactly. The lion takes a subtle natural breath, notices the viewer, gently turns his head toward the viewer and gives a warm confident smile. His free hand opens into a graceful welcoming palm-up gesture, led by the shoulder and elbow, with the wrist and fingers following naturally. His weight shifts slightly while both feet stay planted. The mane and tail follow the body movement with a soft delayed response and settle naturally. The hand holding the casino chip keeps the chip secure. Maintain the same face, golden mane, cream tuxedo, black outfit, gold accessories, body proportions and lighting throughout. Keep the complete body, tail and hand gesture visible with safe margins. Plain uniform background suitable for later removal. No camera movement, no zoom, no cuts, no speech, no text, no added props. End with a relaxed welcoming pose and a short still hold.",
+  "postProduction": [
+    "Check character consistency, hands, chip, feet and gesture continuity before accepting the generated take.",
+    "Remove the background with video matting; inspect mane, tail and fingertips against light and dark backgrounds.",
+    "Export transparent WebM and ProRes 4444 MOV; generate an opaque MP4 only for convenient preview.",
+    "Verify decoded alpha channel and mobile playback before game integration."
+  ],
+  "note": "No video generation submitted, credits consumed or finished output claimed. Requested settings must be matched to the connected provider's available controls."
+}

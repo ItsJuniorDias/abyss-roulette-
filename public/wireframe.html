@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#eeede9">
+  <title>Aurum Club — Wireframe mobile</title>
+  <link rel="stylesheet" href="/wireframe.css">
+  <script src="/wireframe.js" defer></script>
+</head>
+<body>
+  <header class="review-header">
+    <a href="/wireframe.html" class="review-brand">AURUM <span>CLUB</span></a>
+    <span class="review-label">ESTUDO DE COMPOSIÇÃO <b>01</b></span>
+    <button id="review-toggle" class="mobile-review" aria-expanded="false" aria-controls="review-notes">Revisar layout</button>
+    <a href="/" class="back-to-game">Jogo atual ↗</a>
+  </header>
+  <main class="review-layout">
+    <section class="preview-column" aria-label="Protótipo mobile">
+      <div class="preview-caption"><span id="viewport-caption">390 × 844 · RETRATO</span><span>WIREFRAME / V1</span></div>
+      <div id="phone" class="phone" data-state="welcome" data-framing="bust" lang="en">
+        <header class="game-header">
+          <div class="game-brand">AURUM<span>PRIVATE ROULETTE</span></div>
+          <div class="balance"><span>PLAY BALANCE</span><strong>1,000</strong></div>
+          <button id="menu-open" class="icon-button" aria-label="Open game menu">☰</button>
+        </header>
+        <section id="stage" class="stage" aria-label="Lion and roulette stage">
+          <span class="region-label stage-region">01 · PALCO</span>
+          <div class="stage-copy" aria-live="polite">
+            <span id="stage-eyebrow">AURUM · YOUR HOST</span>
+            <h1 id="stage-title">Your table<br>is ready.</h1>
+            <p id="stage-detail">Make yourself at home.</p>
+          </div>
+          <div class="character-frame">
+            <img src="/assets/luxury/mascot-welcome.webp" alt="Aurum, the lion host in a cream tuxedo, framed from the waist up. Static reference." class="character">
+            <span class="frame-label">BUSTO · ÁREA DO VÍDEO</span>
+            <span class="baseline" aria-hidden="true">CORTE FIXO NA CINTURA</span>
+          </div>
+          <div class="wheel-block">
+            <svg id="wheel" viewBox="0 0 240 224" role="img" aria-label="Schematic roulette wheel, placeholder for Three.js">
+              <ellipse cx="120" cy="155" rx="114" ry="57" fill="#dedcd5"/>
+              <g transform="translate(120 128) scale(1 .72)">
+                <circle r="114" fill="#e5e2da" stroke="#817c70" stroke-width="2"/>
+                <circle r="106" fill="none" stroke="#aaa598" stroke-width="1"/>
+                <g id="wheel-segments"></g>
+                <circle r="71" fill="#eae8e1" stroke="#8d887d"/>
+                <circle r="61" fill="none" stroke="#c1bcaf"/>
+                <circle r="20" fill="#d3cec0" stroke="#888172"/>
+                <path d="M-36 0H36M0-36V36" stroke="#888172" stroke-width="3"/>
+                <circle r="7" fill="#888172"/>
+              </g>
+              <circle cx="188" cy="73" r="4" fill="#fcfcfa" stroke="#686252"/>
+            </svg>
+            <span class="wheel-caption">EUROPEAN ROULETTE</span>
+          </div>
+          <div class="stage-result" id="stage-result" hidden><span class="result-pocket">17</span><div class="result-copy"><small>YOU WIN</small><strong>+180</strong><span>PLAY CREDITS</span></div></div>
+          <span class="region-label stage-floor">VÍDEO + CENA 3D</span>
+        </section>
+        <div class="recent"><span>RECENT</span><ol aria-label="Illustrative recent results"><li class="latest">17</li><li>8</li><li>24</li><li>0</li><li>32</li><li>11</li></ol><span class="demo-badge">DEMO</span></div>
+        <section class="bet-dock" aria-label="Betting controls">
+          <div class="dock-heading"><h2>Place your bets</h2><button id="full-table-open" class="text-button">Full table ↗</button></div>
+          <div class="quick-bets" id="quick-bets" role="group" aria-label="Quick bets">
+            <button data-bet="red" class="red-bet"><span>◆</span> RED</button>
+            <button data-bet="black"><span>◇</span> BLACK</button>
+            <button data-bet="low">1–18</button>
+            <button data-bet="even">EVEN</button>
+            <button data-bet="odd">ODD</button>
+            <button data-bet="high">19–36</button>
+            <button data-bet="d1">1st 12</button><button data-bet="d2">2nd 12</button><button data-bet="d3">3rd 12</button>
+          </div>
+          <div class="chip-row"><span>CHIP</span><div id="chips" class="chips" role="group" aria-label="Chip value"><button data-chip="1" aria-pressed="false">1</button><button data-chip="5" aria-pressed="true">5</button><button data-chip="25" aria-pressed="false">25</button><button data-chip="100" aria-pressed="false">100</button></div><button id="clear-bets" class="text-button" disabled>Clear</button></div>
+          <div class="spin-row"><div class="total-bet"><span>TOTAL BET</span><strong id="total-bet">0</strong></div><button id="spin-button" disabled>PLACE A BET <span>↗</span></button></div>
+          <p class="play-note" id="play-note" role="status">Play credits · Layout prototype</p>
+        </section>
+        <div class="home-area" aria-hidden="true"><span></span></div>
+        <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
+        <section id="table-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="table-title" hidden>
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <header class="sheet-heading"><div><span>EUROPEAN ROULETTE</span><h2 id="table-title">Full table</h2></div><button class="icon-button" data-close aria-label="Close full table">×</button></header>
+          <div class="table-scroll" tabindex="0" aria-label="Scroll full betting table"><div id="full-board" class="full-board" role="group" aria-label="All roulette bets"></div></div>
+          <footer class="sheet-footer"><div><span>TOTAL BET</span><strong id="sheet-total">0</strong></div><button id="table-done">Done · Back to stage</button></footer>
+        </section>
+        <section id="menu-sheet" class="bottom-sheet menu-sheet" role="dialog" aria-modal="true" aria-labelledby="menu-title" hidden>
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <header class="sheet-heading"><h2 id="menu-title">Your table</h2><button class="icon-button" data-close aria-label="Close game menu">×</button></header>
+          <label class="sound-option">Sound <input type="checkbox" checked><span>On / Off</span></label>
+          <p>European roulette · 37 pockets<br>Demo play with illustrative credits.</p>
+          <button class="menu-return" data-close>Back to game</button>
+        </section>
+      </div>
+      <p class="prototype-note">Referência estática do leão. As trocas de estado demonstram o layout, não os vídeos finais.</p>
+    </section>
+    <aside id="review-notes" class="review-notes">
+      <p class="overline">MOBILE FIRST · COMPOSIÇÃO</p>
+      <h2>O leão faz parte<br>da mesa.</h2>
+      <p class="intro">O leão da cintura para cima divide o palco com a roleta. O recorte libera espaço para apostas maiores, próximas do polegar.</p>
+      <section class="review-section">
+        <h3><span>01</span> Explore os estados</h3>
+        <div class="state-picker" role="group" aria-label="Estado do wireframe">
+          <button data-state="welcome" aria-pressed="true">Boas-vindas</button><button data-state="idle" aria-pressed="false">Espera</button><button data-state="spin" aria-pressed="false">Giro</button><button data-state="win" aria-pressed="false">Vitória</button><button data-state="loss" aria-pressed="false">Sem prêmio</button>
+        </div>
+        <div class="state-description" aria-live="polite"><strong id="state-name">Boas-vindas</strong><p id="state-description">O leão recebe o jogador. A roleta já está visível e a primeira aposta fica a um toque.</p></div>
+      </section>
+      <section class="review-section settings">
+        <h3><span>02</span> Confira a composição</h3>
+        <label class="size-label">Tela de referência<select id="screen-size"><option value="390,844">390 × 844 · Padrão</option><option value="360,740">360 × 740 · Compacta</option><option value="360,640">360 × 640 · Baixa</option></select></label>
+        <label class="framing-label">Enquadramento<select id="framing"><option value="bust">Busto · junto ao tabuleiro</option><option value="full">Corpo inteiro · comparar</option></select></label>
+        <label class="check-row"><input type="checkbox" id="show-guides"><span>Mostrar áreas e linha de base</span></label>
+        <label class="check-row"><input type="checkbox" id="show-color"><span>Ver as cores do leão aprovado</span></label>
+        <label class="check-row"><input type="checkbox" id="show-background"><span>Aplicar o novo fundo de luxo</span></label>
+      </section>
+      <section class="review-section rules">
+        <h3><span>03</span> Continuidade das animações</h3>
+        <dl><div><dt>Uma identidade</dt><dd>Mesmo rosto, juba, terno creme, joias e ficha.</dd></div><div><dt>Um recorte para a mesa</dt><dd>Câmera e luz fixas. Cintura, escala do rosto e posição iguais na espera, no giro e no resultado.</dd></div><div><dt>Gestos dentro do quadro</dt><dd>Expressões, ombros e mãos conduzem a atuação. Margens preservadas para a juba e os gestos.</dd></div><div><dt>Um único leão</dt><dd>A vitória acontece no próprio palco. Corpo inteiro fica reservado para uma abertura dedicada.</dd></div></dl>
+      </section>
+      <p class="review-footnote">Wireframe de estrutura. Acabamento de luxo e novos vídeos entram após esta composição. Toque em “Full table” para ver as 37 casas e as apostas externas. Resultados ilustrativos.</p>
+    </aside>
+  </main>
+</body>
+</html>
