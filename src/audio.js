@@ -3,12 +3,13 @@
 // manifest.json). Every sound has a synthesized fallback, so the game still works with
 // no audio files or before they finish loading.
 //
-// Mix: three buses (music / ambience / sfx) -> soft compressor -> master (mute).
-// Original lounge chords are synthesized; physical roulette sounds use AudioBuffers.
+// Mix: streaming lounge music / decoded short SFX -> compressor -> master (mute).
+// Music streams to avoid decoding a two-minute stereo track into mobile memory.
 
 const BASE = `${import.meta.env.BASE_URL}audio/`;
-const MIX = { music: 0.23, amb: 0.25, sfx: 0.8 };
+const MIX = { music: 0.38, sfx: 0.8 };
 const MUTE_KEY = 'aurum-club:muted';
+const music = document.getElementById('lounge-music');
 
 let ac = null;
 let master, comp, noiseBuf;
@@ -17,7 +18,6 @@ const buffers = {};
 let manifest = {};
 let started = false;
 let muted = readMuted();
-let tension = null;
 let musicRestore = 0;
 
 // iOS: play through the silent switch, like a music app, instead of as a ringer-level sound.
@@ -41,14 +41,20 @@ export function audio() {
       bus[k].gain.value = MIX[k];
       bus[k].connect(comp);
     }
+    ac.createMediaElementSource(music).connect(bus.music);
     noiseBuf = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate);
     const d = noiseBuf.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
 
     // pause everything while the tab is hidden
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) ac.suspend();
-      else ac.resume();
+      if (document.hidden) {
+        music.pause();
+        ac.suspend().catch(() => {});
+      } else if (started) {
+        ac.resume().catch(() => {});
+        resumeMusic();
+      }
     });
   }
   // iOS can also leave the context 'interrupted' (after a call, Siri, backgrounding)
@@ -59,7 +65,7 @@ export function audio() {
 // ---------- loading ----------
 async function loadManifest() {
   try {
-    const r = await fetch(`${BASE}manifest.json`);
+    const r = await fetch(`${BASE}manifest.json`, { cache: 'no-cache' });
     if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return false;
     manifest = await r.json();
     return true;
@@ -68,7 +74,8 @@ async function loadManifest() {
 
 async function loadBuffer(slot) {
   try {
-    const r = await fetch(BASE + manifest[slot].file);
+    const asset = manifest[slot];
+    const r = await fetch(`${BASE}${asset.file}?v=${asset.sha256?.slice(0, 12) || '1'}`);
     if (r.ok) buffers[slot] = await ac.decodeAudioData(await r.arrayBuffer());
   } catch { /* keep the synth fallback */ }
 }
@@ -85,11 +92,12 @@ function play(slot, { vol = 1, rate = 1, to = 'sfx', delay = 0 } = {}) {
   const g = ac.createGain();
   g.gain.value = vol;
   s.connect(g).connect(bus[to]);
+  s.onended = () => { s.disconnect(); g.disconnect(); };
   s.start(ac.currentTime + delay);
   return { src: s, gain: g };
 }
 
-function loop(slot, { vol = 1, to = 'amb', fadeIn = 2 } = {}) {
+function loop(slot, { vol = 1, to = 'sfx', fadeIn = 2 } = {}) {
   const b = buffers[slot];
   if (!b) return null;
   const [start, end] = manifest[slot].loop || [0, b.duration];
@@ -99,11 +107,12 @@ function loop(slot, { vol = 1, to = 'amb', fadeIn = 2 } = {}) {
   g.gain.value = 0;
   ramp(g.gain, vol, fadeIn);
   s.connect(g).connect(bus[to]);
+  s.onended = () => { s.disconnect(); g.disconnect(); };
   s.start(ac.currentTime, start);
   return { src: s, gain: g };
 }
 
-// ---------- original lounge accompaniment (no external music samples) ----------
+// ---------- short musical fallback ----------
 function pianoNote(midi, when, duration = 2.4, volume = .11, destination = 'music') {
   const frequency = 440 * 2 ** ((midi - 69) / 12);
   [1, 2, 3].forEach((harmonic, i) => {
@@ -116,17 +125,10 @@ function pianoNote(midi, when, duration = 2.4, volume = .11, destination = 'musi
     o.onended = () => { o.disconnect(); g.disconnect(); };
   });
 }
-function startLounge() {
-  const chords = [[48, 55, 59, 64], [45, 52, 55, 59], [50, 57, 60, 64], [43, 53, 59, 64]];
-  let next = ac.currentTime + .1, bar = 0;
-  setInterval(() => {
-    if (ac.state !== 'running' || document.hidden || next > ac.currentTime + .2) return;
-    next = Math.max(next, ac.currentTime + .02);
-    const chord = chords[bar++ % chords.length];
-    chord.forEach((note, i) => pianoNote(note, next + i * .065, 3.4, .09));
-    pianoNote(chord[2] + 12, next + 1.35, 1.7, .05);
-    next += 3.2;
-  }, 150);
+function resumeMusic() {
+  if (!started || muted || document.hidden || !music.paused) return;
+  // Called synchronously inside gestures too, so a blocked mobile play can retry.
+  music.play().catch(() => {});
 }
 
 // iOS also needs a sound started inside the gesture before the context makes noise.
@@ -137,25 +139,24 @@ function unlockOutput() {
   s.start();
 }
 
-// Call from every user gesture. The first one unlocks audio, then loads the manifest,
-// starts the music right away and the ambience as soon as each loop is decoded.
+// The first gesture unlocks both Web Audio and the streaming media element.
 export function start() {
   audio();
   if (started) {
-    // if a browser still blocked a play() that ran after an await, retry on this gesture
+    resumeMusic();
     return;
   }
   started = true;
   unlockOutput();
-  startLounge();
+  resumeMusic();
   boot();
 }
 
 async function boot() {
   if (!(await loadManifest())) return;
-  // Only the physical roulette/chip samples belong to the new sound direction.
-  const slots = ['sfx_chip_place', 'sfx_chip_stack_clear', 'sfx_wheel_spin_start',
-    'sfx_ball_roll_loop', 'sfx_ball_deflector', 'sfx_ball_hit_a', 'sfx_ball_hit_b', 'sfx_ball_settle'];
+  const slots = ['sfx_chip_place', 'sfx_chip_stack_clear', 'sfx_ui_click', 'sfx_wheel_spin_start',
+    'sfx_ball_roll_loop', 'sfx_ball_deflector', 'sfx_ball_hit_a', 'sfx_ball_hit_b',
+    'sfx_ball_settle', 'sfx_win_fanfare'];
   await Promise.all(slots.filter(slot => manifest[slot]).map(loadBuffer));
 }
 
@@ -165,6 +166,8 @@ export function toggleMute() {
   muted = !muted;
   try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch { /* storage blocked */ }
   if (ac) ramp(master.gain, muted ? 0 : 1, 0.15);
+  if (muted) music.pause();
+  else resumeMusic();
   return muted;
 }
 
@@ -217,7 +220,6 @@ export function spinStart() {
   // duck the music a little while the ball is live (and cancel a pending restore from the last round)
   clearTimeout(musicRestore);
   ramp(bus.music.gain, MIX.music * 0.65, 0.8);
-  if (has('music_spin_tension')) tension = play('music_spin_tension', { vol: 0.7, to: 'music' });
 }
 
 // Ball rolling loop: call set(intensity 0..1, speed rad/s) every frame, stop() at the end.
@@ -264,12 +266,15 @@ export function settle() {
 // kind: 'win' | 'bigwin' | 'lose'
 export function result(kind) {
   audio();
-  if (tension) { ramp(tension.gain.gain, 0, 0.6); tension.src.stop(ac.currentTime + 1.5); tension = null; }
   clearTimeout(musicRestore);
-  musicRestore = setTimeout(() => ramp(bus.music.gain, MIX.music, 2.5), kind === 'bigwin' ? 3500 : 1500);
+  const victory = kind !== 'lose';
+  if (victory) ramp(bus.music.gain, MIX.music * 0.45, 0.2);
+  musicRestore = setTimeout(() => ramp(bus.music.gain, MIX.music, 1.8), victory ? 4300 : 1000);
 
   if (kind === 'lose') { pianoNote(55, ac.currentTime, .45, .07, 'sfx'); return; }
-  const notes = kind === 'bigwin' ? [72, 76, 79, 83, 86] : [72, 76, 79];
-  notes.forEach((note, i) => pianoNote(note, ac.currentTime + i * .11, 1.6, .13, 'sfx'));
-  sweep(.65);
+  if (!play('sfx_win_fanfare', { vol: kind === 'bigwin' ? 0.85 : 0.55 })) {
+    const notes = kind === 'bigwin' ? [72, 76, 79, 83, 86] : [72, 76, 79];
+    notes.forEach((note, i) => pianoNote(note, ac.currentTime + i * .11, 1.6, .13, 'sfx'));
+  }
+  sweep(1.1);
 }

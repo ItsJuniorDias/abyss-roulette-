@@ -13,7 +13,7 @@ A 3D European roulette game in the browser, drawn like a Mike Mignola comic: har
 - **Unbiased RNG**: `crypto.getRandomValues` with rejection sampling, so there is no modulo bias
 - **Toon look built in code**: a 3-step gradient map, inverted-hull ink outlines and hand-hatched canvas textures for the wheel and sigil
 - **Generated art (optional)**: a backdrop, sigil, felt and wood textures made with Gemini 2.5 Flash Image through OpenRouter. Every image has a procedural fallback.
-- **Layered audio mix**: music, ambience and SFX buses go through a compressor. The music playlist crossfades, the ambience loops seamlessly, and the ball-roll sound follows the ball's speed. Every sample has a synthesized fallback.
+- **Layered audio mix**: streamed jazz lounge music and short Pixabay effects share a compressor. Music ducks during spins and wins; ball-roll playback follows the ball's speed. Short effects have synthesized fallbacks.
 - **Comic result FX**: a "KRA-THOOM!" banner, screen shake, a red flash and an ember burst on wins. Winning bets light up and the balance counts up.
 - **Phone layout**: in portrait the betting table turns vertical, and it slides away while the ball is live so the wheel fills the screen
 - **Saved progress**: the balance, the last bets and the history survive a reload. **REFILL** appears when you run out of credits.
@@ -87,17 +87,26 @@ Every asset is optional. If a file is missing, the game draws a procedural versi
 
 ## Audio
 
-All sounds come from Pixabay. [AUDIO_CREDITS.md](AUDIO_CREDITS.md) lists the sources, authors and license notes.
+The current soundtrack is **Luxury Jazz Lounge Background Music** by Top-Flow,
+with six selected Pixabay effects for chips, roulette, UI and brass celebrations.
+[AUDIO_CREDITS.md](AUDIO_CREDITS.md) lists the source pages, authors and processing.
 
-Put the raw Pixabay downloads in `audio-src/` (gitignored) and keep the Pixabay id in each file name. Then run:
+Put the seven original MP3s in `audio-src/` (gitignored), keeping the Pixabay ID
+in each filename, then run:
 
 ```bash
 npm run audio:prepare
+node --test scripts/test-audio.mjs
 ```
 
-The script cuts and trims each clip, normalizes its loudness, builds seamless loops and writes `public/audio/manifest.json`. A sound that is missing falls back to a synthesized version.
+The pipeline normalizes levels, prepares rolling loops and removes obsolete
+exports. It keeps the current runtime set if any selected source is missing.
 
-Browsers only allow sound after a user gesture, so the first click, tap or key press does the setup. It unlocks the audio, including on iOS Safari, where it also plays through the silent switch. It then starts the music right away and adds the ambience and effects as they finish decoding.
+The first tap or key press unlocks playback. Music streams through an HTML audio
+element routed into the Web Audio mixer, while only short effects are decoded in
+memory. Music lowers during spins and wins. Sound settings persist, and changing
+tabs pauses audio. Missing effects retain synthesized fallbacks. Physical iPhone
+playback still needs device validation.
 
 ## How the spin works
 
@@ -116,7 +125,7 @@ src/
   main.js     ball path, betting and payouts, UI, camera, game loop
   scene.js    renderer, lights, toon materials, wheel, props, particles
   rules.js    wheel order, bet table, secure RNG
-  audio.js    audio engine: buses, music playlist, loops, SFX, synth fallbacks, mute
+  audio.js    streaming lounge music, SFX, rolling loops, fallbacks, mute
   style.css   comic-panel UI
 scripts/
   gen-assets.mjs     AI art generation (OpenRouter)
@@ -138,7 +147,7 @@ public/
 - [x] WebP images: ~500 KB instead of 5.3 MB of PNGs
 - [ ] Inside bets: split, street, corner, six line, 0-1-2-3
 - [ ] Table limits
-- [ ] Extra music cues: spin tension, win jingle, big-win stinger (see [AUDIO_CREDITS.md](AUDIO_CREDITS.md))
+- [x] Jazz lounge soundtrack, physical roulette effects and brass victory cue
 
 ## Production notes
 

@@ -5,13 +5,14 @@
 // For every job below it finds the source file by its Pixabay id (downloads are named
 // "<author>-<slug>-<id>.mp3"), cuts the segment, trims leading silence, normalizes
 // loudness, builds seamless loops and writes public/audio/manifest.json, which the
-// game reads at startup. Jobs whose source file is missing are skipped, and the game
-// falls back to its synthesized sound for that slot.
+// game reads at startup. A missing source aborts publication and preserves the existing runtime set.
+// Short effects retain synthesized fallbacks if a browser cannot load them.
 //
 // Requires ffmpeg on PATH.
 
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync, rmSync, mkdirSync, copyFileSync, existsSync, unlinkSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,45 +25,26 @@ const OUT = join(ROOT, 'public', 'audio');
 // That keeps the loop seamless even when a browser does not strip the MP3 encoder delay.
 const PAD = 0.25;
 
-const TARGET = { oneshot: -16, loop: -22, music: -18 }; // LUFS
-const PEAK_TARGET = -3; // dBFS, for clips too short to measure loudness
+const TARGET = { oneshot: -20, loop: -24, music: -18 }; // LUFS
+const PEAK_TARGET = -7; // dBFS, for clips too short to measure loudness
 
 // kind: oneshot | loop | music
 // start/end: segment in seconds · fadeOut: seconds · xfade: loop crossfade seconds
 // trim: remove leading silence (oneshots, default true) · gain: extra dB after normalizing
+const SELECTION = JSON.parse(readFileSync(join(ROOT, 'design-system/audio-selection.json'), 'utf8'));
+const provenance = new Map(SELECTION.assets.map(asset => [asset.id, asset]));
 const JOBS = [
-  // table & UI
-  { slot: 'sfx_chip_place', id: 522523, kind: 'oneshot' },
-  { slot: 'sfx_chip_stack_clear', id: 96121, kind: 'oneshot' },
-  { slot: 'sfx_ui_click', id: 41289, kind: 'oneshot', gain: -3 },
-
-  // roulette mechanics (roulette_casino_evian is a real casino recording)
-  { slot: 'sfx_wheel_spin_start', id: 429832, kind: 'oneshot', end: 3.6, fadeOut: 1.2, gain: -2 },
-  { slot: 'sfx_ball_roll_loop', id: 14446, kind: 'loop', start: 4.0, end: 8.5, xfade: 0.4, target: -18 },
-  { slot: 'sfx_ball_deflector', id: 14446, kind: 'oneshot', start: 17.0, end: 17.65, fadeOut: 0.15, trim: false },
-  { slot: 'sfx_ball_hit_a', id: 99750, kind: 'oneshot', start: 0.1, end: 0.55, fadeOut: 0.12 },
-  { slot: 'sfx_ball_hit_b', id: 14446, kind: 'oneshot', start: 20.45, end: 20.64, fadeOut: 0.05, trim: false },
-  { slot: 'sfx_ball_settle', id: 14446, kind: 'oneshot', start: 23.4, end: 24.2, fadeOut: 0.3, trim: false },
-
-  // results
-  { slot: 'sfx_win_hit', id: 352062, kind: 'oneshot' },
-  { slot: 'sfx_bigwin_impact', id: 443132, kind: 'oneshot' },
-  { slot: 'sfx_lose_thud', id: 291047, kind: 'oneshot', gain: -4 },
-  { slot: 'sfx_ember_whoosh', id: 179125, kind: 'oneshot', gain: -3 },
-
-  // ambience
-  { slot: 'amb_crypt_loop', id: 6983, kind: 'loop', start: 10, end: 43, xfade: 3 },
-  { slot: 'amb_candle_fire_loop', id: 123930, kind: 'loop', start: 5, end: 37, xfade: 2 },
-
-  // music playlist (both without Content ID)
-  // "Hidden Ritual" (465795) is deliberately left out: it is Content ID registered.
-  { slot: 'music_main_a', id: 456038, kind: 'music' },
-  { slot: 'music_main_b', id: 456523, kind: 'music' },
-
-  // optional cues from the curated list: download them into audio-src/ and re-run
-  { slot: 'music_spin_tension', id: 481586, kind: 'oneshot', end: 14, fadeOut: 2, trim: true, gain: -6 },
-  { slot: 'music_win_jingle', id: 442713, kind: 'oneshot', end: 3.2, fadeOut: 0.9, gain: -6 },
-  { slot: 'music_bigwin_stinger', id: 591739, kind: 'oneshot', end: 7, fadeOut: 2, gain: -3 },
+  { slot: 'music_lounge', id: 464517, kind: 'music', xfade: 2 },
+  { slot: 'sfx_chip_place', id: 522521, kind: 'oneshot', gain: -2 },
+  { slot: 'sfx_chip_stack_clear', id: 96121, kind: 'oneshot', gain: -3 },
+  { slot: 'sfx_ui_click', id: 126517, kind: 'oneshot', gain: -6 },
+  { slot: 'sfx_wheel_spin_start', id: 429832, kind: 'oneshot', end: 2.8, fadeOut: 1.0, gain: -5 },
+  { slot: 'sfx_ball_roll_loop', id: 429831, kind: 'loop', start: .15, end: 2.15, xfade: .2 },
+  { slot: 'sfx_ball_deflector', id: 429831, kind: 'oneshot', start: 2.75, end: 2.93, fadeOut: .04, trim: false },
+  { slot: 'sfx_ball_hit_a', id: 429831, kind: 'oneshot', start: 3.02, end: 3.16, fadeOut: .035, trim: false },
+  { slot: 'sfx_ball_hit_b', id: 429831, kind: 'oneshot', start: 4.0, end: 4.12, fadeOut: .03, trim: false },
+  { slot: 'sfx_ball_settle', id: 429831, kind: 'oneshot', start: 5.6, end: 6.15, fadeOut: .12, trim: false, gain: -3 },
+  { slot: 'sfx_win_fanfare', id: 144755, kind: 'oneshot', fadeOut: .35, target: -19 },
 ];
 
 function ff(args) {
@@ -87,10 +69,10 @@ function measure(file) {
 const sources = (() => {
   try { return readdirSync(SRC); } catch { return []; }
 })();
-const findSource = (id) => sources.find((f) => f.includes(`-${id}.`));
+const findSource = (id) => sources.find(f => new RegExp(`-${id}(?: \\(\\d+\\))?\\.mp3$`, 'i').test(f));
 
 mkdirSync(OUT, { recursive: true });
-const tmp = mkdtempSync(join(tmpdir(), 'abyss-audio-'));
+const tmp = mkdtempSync(join(tmpdir(), 'aurum-audio-'));
 const manifest = {};
 let skipped = 0;
 
@@ -99,7 +81,7 @@ for (const job of JOBS) {
   if (!srcName) { console.log(`- ${job.slot.padEnd(22)} skipped (no file with id ${job.id} in audio-src/)`); skipped++; continue; }
   const src = join(SRC, srcName);
   const seg = join(tmp, `${job.slot}-seg.wav`);
-  const out = join(OUT, `${job.slot}.mp3`);
+  const out = join(tmp, `${job.slot}.mp3`);
 
   // 1) cut the segment (plus a 3 ms fade-in when cutting mid-file, to avoid clicks)
   const cut = [];
@@ -108,16 +90,12 @@ for (const job of JOBS) {
   const pre = [];
   if (job.kind === 'oneshot' && job.trim !== false) pre.push('silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.005');
   if (job.start != null) pre.push('afade=t=in:d=0.003');
-  if (job.fadeOut) {
-    const len = (job.end ?? probeDuration(src)) - (job.start ?? 0);
-    pre.push(`afade=t=out:st=${Math.max(0, len - job.fadeOut).toFixed(3)}:d=${job.fadeOut}`);
-  }
   ff([...cut, '-i', src, ...(pre.length ? ['-af', pre.join(',')] : []), '-ar', '44100', seg]);
 
   // 2) seamless loop: crossfade the tail into the head, then wrap PAD on both sides
   let body = seg;
   let loop = null;
-  if (job.kind === 'loop') {
+  if (job.kind === 'loop' || job.kind === 'music') {
     const X = job.xfade ?? 1;
     const circ = join(tmp, `${job.slot}-circ.wav`);
     ff(['-i', seg, '-filter_complex',
@@ -128,8 +106,9 @@ for (const job of JOBS) {
     ff(['-i', circ, '-filter_complex',
       `[0:a]asplit=3[x][y][z];[x]atrim=start=${(Lc - PAD).toFixed(4)},asetpts=PTS-STARTPTS[p];[z]atrim=end=${PAD},asetpts=PTS-STARTPTS[q];[p][y][q]concat=n=3:v=0:a=1[o]`,
       '-map', '[o]', padded]);
-    body = padded;
-    loop = [PAD, +(PAD + Lc).toFixed(4)];
+    // Music streams through HTMLAudioElement, which loops the whole gapless MP3.
+    body = job.kind === 'music' ? circ : padded;
+    if (job.kind === 'loop') loop = [PAD, +(PAD + Lc).toFixed(4)];
   }
 
   // 3) normalize: loudness for normal clips, peak for very short ones
@@ -140,16 +119,30 @@ for (const job of JOBS) {
   // one-shots get a limiter; loops and music must stay sample-exact, so their gain is capped to keep peaks under -1 dBTP
   if (job.kind !== 'oneshot') gain = Math.min(gain, -1 - m.truePeak);
   const filters = [`volume=${gain.toFixed(2)}dB`];
+  if (job.fadeOut) filters.push(`afade=t=out:st=${Math.max(0, len - job.fadeOut).toFixed(3)}:d=${job.fadeOut}`);
   if (job.kind === 'oneshot') filters.push('alimiter=limit=0.89:attack=1:release=40:level=false');
 
   // 4) encode
   const enc = job.kind === 'music' ? ['-b:a', '128k'] : job.kind === 'loop' ? ['-b:a', '160k'] : ['-q:a', '2'];
-  ff(['-i', body, '-af', filters.join(','), '-c:a', 'libmp3lame', ...enc, out]);
+  ff(['-i', body, '-af', filters.join(','), '-map_metadata', '-1', '-c:a', 'libmp3lame', ...enc, out]);
 
-  manifest[job.slot] = { file: `${job.slot}.mp3`, kind: job.kind, ...(loop ? { loop } : {}), source: srcName };
+  const sha256 = createHash('sha256').update(readFileSync(out)).digest('hex');
+  manifest[job.slot] = { file: `${job.slot}.mp3`, kind: job.kind, ...(loop ? { loop } : {}), duration: +probeDuration(out).toFixed(4), sha256, source: srcName, origin: provenance.get(job.id) };
   console.log(`+ ${job.slot.padEnd(22)} ${len.toFixed(2).padStart(6)}s  gain ${gain >= 0 ? '+' : ''}${gain.toFixed(1)} dB  ← ${srcName}`);
 }
 
-writeFileSync(join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+if (skipped) {
+  rmSync(tmp, { recursive: true, force: true });
+  throw new Error('Incomplete audio set. Previous runtime files were preserved; add the missing downloads and rerun.');
+}
+const manifestPath = join(OUT, 'manifest.json');
+const previous = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : {};
+const currentFiles = new Set(Object.values(manifest).map(asset => asset.file));
+for (const file of currentFiles) copyFileSync(join(tmp, file), join(OUT, file));
+// Remove only obsolete generated files listed by the previous manifest.
+for (const asset of Object.values(previous)) {
+  if (/^[a-z0-9_]+\.mp3$/.test(asset.file) && !currentFiles.has(asset.file) && existsSync(join(OUT, asset.file))) unlinkSync(join(OUT, asset.file));
+}
+writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${Object.keys(manifest).length} prepared, ${skipped} skipped → public/audio/manifest.json`);

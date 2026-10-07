@@ -1,99 +1,150 @@
 {
+  "music_lounge": {
+    "file": "music_lounge.mp3",
+    "kind": "music",
+    "duration": 134.6988,
+    "sha256": "26b1b798dd16ba6fc372a56a5c2edf3959c718730fd7c3906892ba1578a4daaa",
+    "source": "top-flow-luxury-jazz-lounge-background-music-464517.mp3",
+    "origin": {
+      "id": 464517,
+      "title": "Luxury Jazz Lounge Background Music",
+      "author": "Top-Flow",
+      "url": "https://pixabay.com/music/traditional-jazz-luxury-jazz-lounge-background-music-464517/",
+      "contentId": "registered on the source page"
+    }
+  },
   "sfx_chip_place": {
     "file": "sfx_chip_place.mp3",
     "kind": "oneshot",
-    "source": "oxidvideos-placing-poker-chips-522523.mp3"
+    "duration": 0.6644,
+    "sha256": "72031005d76564cf7920eda3cdabcae95c812f06888546f88813c0f592ee5def",
+    "source": "oxidvideos-placing-poker-chips-522521.mp3",
+    "origin": {
+      "id": 522521,
+      "title": "Placing poker chips",
+      "author": "OxidVideos",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-placing-poker-chips-522521/"
+    }
   },
   "sfx_chip_stack_clear": {
     "file": "sfx_chip_stack_clear.mp3",
     "kind": "oneshot",
-    "source": "freesound_community-allinpushchips-96121.mp3"
+    "duration": 0.8663,
+    "sha256": "2e78a13aad4c418b7ace8117e5330176f5ee2b1749ed35279dc5bfddc475b896",
+    "source": "freesound_community-allinpushchips-96121.mp3",
+    "origin": {
+      "id": 96121,
+      "title": "AllInPushChips",
+      "author": "joeyed via freesound_community",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-allinpushchips-96121/"
+    }
   },
   "sfx_ui_click": {
     "file": "sfx_ui_click.mp3",
     "kind": "oneshot",
-    "source": "freesound_community-menu-button-stone-41289.mp3"
+    "duration": 1.3954,
+    "sha256": "de62aff0b775b54689a255c3275cfa298787a1009a8f05f3356706925fe3a2d1",
+    "source": "universfield-soft-interface-click-126517.mp3",
+    "origin": {
+      "id": 126517,
+      "title": "Soft Interface Click",
+      "author": "Universfield",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-soft-interface-click-126517/"
+    }
   },
   "sfx_wheel_spin_start": {
     "file": "sfx_wheel_spin_start.mp3",
     "kind": "oneshot",
-    "source": "spinopel-spinning-roulette-wheel-429832.mp3"
+    "duration": 2.7164,
+    "sha256": "da41252776129337f2100fe6b8170fbeea32cfa5f94f6e18910fd72cc8a6db4a",
+    "source": "spinopel-spinning-roulette-wheel-429832.mp3",
+    "origin": {
+      "id": 429832,
+      "title": "Spinning roulette wheel",
+      "author": "spinopel",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-spinning-roulette-wheel-429832/"
+    }
   },
   "sfx_ball_roll_loop": {
     "file": "sfx_ball_roll_loop.mp3",
     "kind": "loop",
     "loop": [
       0.25,
-      4.35
+      2.05
     ],
-    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+    "duration": 2.3,
+    "sha256": "616d65ead0c61852e43849fabb34be25f3e611660814f60770ffc16a9a283c22",
+    "source": "spinopel-a-roulette-ball-429831.mp3",
+    "origin": {
+      "id": 429831,
+      "title": "A roulette ball",
+      "author": "spinopel",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-a-roulette-ball-429831/"
+    }
   },
   "sfx_ball_deflector": {
     "file": "sfx_ball_deflector.mp3",
     "kind": "oneshot",
-    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+    "duration": 0.18,
+    "sha256": "ab70832008101d75887b1bd1b66ad5ddde76938bb4bbaced2e007c39883f3191",
+    "source": "spinopel-a-roulette-ball-429831.mp3",
+    "origin": {
+      "id": 429831,
+      "title": "A roulette ball",
+      "author": "spinopel",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-a-roulette-ball-429831/"
+    }
   },
   "sfx_ball_hit_a": {
     "file": "sfx_ball_hit_a.mp3",
     "kind": "oneshot",
-    "source": "freesound_community-ball-in-hole-99750.mp3"
+    "duration": 0.14,
+    "sha256": "683ce3b172ac0b9d5f23fe346731bbcfa921e80e43975dd5fefff42617f282b5",
+    "source": "spinopel-a-roulette-ball-429831.mp3",
+    "origin": {
+      "id": 429831,
+      "title": "A roulette ball",
+      "author": "spinopel",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-a-roulette-ball-429831/"
+    }
   },
   "sfx_ball_hit_b": {
     "file": "sfx_ball_hit_b.mp3",
     "kind": "oneshot",
-    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+    "duration": 0.12,
+    "sha256": "1b8ecf25d625b030960a9e56e2a32030895888a13876c8c58efcb107f19a960f",
+    "source": "spinopel-a-roulette-ball-429831.mp3",
+    "origin": {
+      "id": 429831,
+      "title": "A roulette ball",
+      "author": "spinopel",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-a-roulette-ball-429831/"
+    }
   },
   "sfx_ball_settle": {
     "file": "sfx_ball_settle.mp3",
     "kind": "oneshot",
-    "source": "freesound_community-roulette_casino_evianaif-14446.mp3"
+    "duration": 0.55,
+    "sha256": "3ec9d402c661e2d10504d531acff10531b2620f03b8f1104723cc93c3ebc9ca7",
+    "source": "spinopel-a-roulette-ball-429831.mp3",
+    "origin": {
+      "id": 429831,
+      "title": "A roulette ball",
+      "author": "spinopel",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-a-roulette-ball-429831/"
+    }
   },
-  "sfx_win_hit": {
-    "file": "sfx_win_hit.mp3",
+  "sfx_win_fanfare": {
+    "file": "sfx_win_fanfare.mp3",
     "kind": "oneshot",
-    "source": "universfield-single-church-bell-2-352062.mp3"
-  },
-  "sfx_bigwin_impact": {
-    "file": "sfx_bigwin_impact.mp3",
-    "kind": "oneshot",
-    "source": "dragon-studio-dry-thunder-443132.mp3"
-  },
-  "sfx_lose_thud": {
-    "file": "sfx_lose_thud.mp3",
-    "kind": "oneshot",
-    "source": "universfield-impact-thud-291047.mp3"
-  },
-  "sfx_ember_whoosh": {
-    "file": "sfx_ember_whoosh.mp3",
-    "kind": "oneshot",
-    "source": "floraphonic-fireball-whoosh-1-179125.mp3"
-  },
-  "amb_crypt_loop": {
-    "file": "amb_crypt_loop.mp3",
-    "kind": "loop",
-    "loop": [
-      0.25,
-      30.25
-    ],
-    "source": "freesound_community-dungeon-air-6983.mp3"
-  },
-  "amb_candle_fire_loop": {
-    "file": "amb_candle_fire_loop.mp3",
-    "kind": "loop",
-    "loop": [
-      0.25,
-      30.25
-    ],
-    "source": "soundsforyou-fireplace-fire-crackling-loop-123930.mp3"
-  },
-  "music_main_a": {
-    "file": "music_main_a.mp3",
-    "kind": "music",
-    "source": "nxtlvl_snds-dark-cinematic-drone-deep-bass-ambient-456038.mp3"
-  },
-  "music_main_b": {
-    "file": "music_main_b.mp3",
-    "kind": "music",
-    "source": "dpatterson_composer-religious-mystery-dark-day-precedes-the-light-456523.mp3"
+    "duration": 4.1842,
+    "sha256": "42a729fde654165f01cdeb84aa50dfc33a8e8cd9451544efe2651e1eff01038f",
+    "source": "universfield-brass-fanfare-144755.mp3",
+    "origin": {
+      "id": 144755,
+      "title": "Brass Fanfare",
+      "author": "Universfield",
+      "url": "https://pixabay.com/sound-effects/film-special-effects-brass-fanfare-144755/"
+    }
   }
 }
